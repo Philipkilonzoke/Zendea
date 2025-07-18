@@ -1,5 +1,3 @@
-
-// Import Firebase libraries from CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -17,7 +15,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Fetch Jobs
 async function loadJobs() {
   const jobsCol = collection(db, "jobs");
   const jobsSnap = await getDocs(jobsCol);
@@ -31,7 +28,6 @@ async function loadJobs() {
   });
 }
 
-// Fetch Deals
 async function loadDeals() {
   const dealsCol = collection(db, "deals");
   const dealsSnap = await getDocs(dealsCol);
@@ -45,14 +41,11 @@ async function loadDeals() {
   });
 }
 
-// Show login/logout
 onAuthStateChanged(auth, user => {
   const authLinks = document.getElementById("auth-links");
   if (user) {
-    authLinks.innerHTML = `<button id="logout-btn">Logout</button>`;
-    document.getElementById("logout-btn").addEventListener("click", () => {
-      signOut(auth);
-    });
+    authLinks.innerHTML = `<a href="post.html">Post</a> | <button id="logout-btn">Logout</button>`;
+    document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
   } else {
     authLinks.innerHTML = `<a href="login.html">Login / Signup</a>`;
   }
