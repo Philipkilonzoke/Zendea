@@ -28,3 +28,40 @@ Built to be simple, fast, and accessible from any device — especially on mobil
 ---
 
 ## 📂 Folder Structure
+/
+├── index.html
+├── style.css
+├── app.js
+└── README.md
+
+---
+
+## 📖 How to Use
+1️⃣ Clone or download this repository.  
+2️⃣ Open `index.html` in your browser to see the site.  
+3️⃣ Customize content in `index.html` & `style.css`.  
+4️⃣ Upload to GitHub Pages to make it live!
+
+---
+
+## 🔗 Live Site
+➡️ (Add your GitHub Pages link here after deployment)
+
+---
+
+## 👨‍💻 Future Improvements
+✅ Integrate Firebase authentication  
+✅ Add Firestore database for listings  
+✅ Enable posting & editing ads  
+✅ Add moderation & featured listings  
+
+---
+
+## 📬 Contact
+For feedback or collaboration:  
+📧 [your-email@example.com]  
+🌍 [https://zendea.com] (future domain)  
+
+---
+
+© 2025 Zendea. All rights reserved.
