@@ -8,7 +8,7 @@
   
   <!-- SEO & Social Meta Tags -->
   <meta name="description" content="Discover amazing job opportunities and exclusive deals on Zendea. Connect, explore, and find what matters to you.">
-  <meta name="keywords" content="jobs, deals, opportunities, employment, discounts, marketplace">
+  <meta name="keywords" content="jobs, deals, opportunities, employment, discounts, marketplace, AI recommendations">
   <meta property="og:title" content="Zendea — Find Jobs & Deals That Matter">
   <meta property="og:description" content="Discover amazing job opportunities and exclusive deals on Zendea.">
   <meta property="og:image" content="https://zendea.com/og-image.jpg">
@@ -29,6 +29,16 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Map Integration -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Zendea">
+  <meta name="mobile-web-app-capable" content="yes">
+  
   <!-- Styles -->
   <link rel="stylesheet" href="style.css">
   
@@ -45,6 +55,10 @@
   <!-- 🎬 Splash Screen -->
   <div class="splash-screen" id="splashScreen">
     <div class="splash-logo">Zendea</div>
+    <div class="splash-subtitle">Loading amazing opportunities...</div>
+    <div class="splash-progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
   </div>
 
   <!-- 🎪 Welcome Screen (for guests) -->
@@ -52,6 +66,20 @@
     <div class="welcome-content">
       <div class="welcome-logo">Zendea</div>
       <p class="welcome-tagline">Bridging Opportunities, Creating Connections</p>
+      <div class="welcome-features">
+        <div class="feature-item">
+          <i class="fas fa-robot"></i>
+          <span>AI-Powered Recommendations</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-bell"></i>
+          <span>Smart Job Alerts</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-map-marked-alt"></i>
+          <span>Location-Based Search</span>
+        </div>
+      </div>
       <div class="welcome-buttons">
         <a href="login.html" class="welcome-btn primary">
           <i class="fas fa-sign-in-alt"></i> Get Started
@@ -82,6 +110,13 @@
           <a href="profile.html" class="nav-link" id="profileLink">
             <i class="fas fa-user"></i> Profile
           </a>
+          <a href="#" class="nav-link" id="messagesLink">
+            <i class="fas fa-comments"></i> Messages
+            <span class="notification-badge hidden" id="messagesBadge">3</span>
+          </a>
+          <a href="#" class="nav-link" id="bookmarksLink">
+            <i class="fas fa-bookmark"></i> Saved
+          </a>
           <a href="login.html" class="nav-link" id="authLink">
             <i class="fas fa-sign-in-alt"></i> Login
           </a>
@@ -91,9 +126,16 @@
           Welcome back, <span class="user-name" id="userName">User</span>!
         </div>
         
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <i class="fas fa-sun"></i>
-        </button>
+        <div class="header-actions">
+          <button class="btn-icon notification-btn" id="notificationBtn" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge">2</span>
+          </button>
+          
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-sun"></i>
+          </button>
+        </div>
       </nav>
     </div>
   </header>
@@ -103,22 +145,167 @@
     <!-- Page Header -->
     <div class="page-header">
       <h1 class="page-title">Discover Opportunities</h1>
-      <p class="page-subtitle">Find amazing jobs and exclusive deals in one place</p>
-    </div>
-
-    <!-- Search Section -->
-    <div class="search-section">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input 
-          type="text" 
-          id="search" 
-          class="search-input" 
-          placeholder="Search jobs, deals, locations..."
-          aria-label="Search jobs and deals"
-        >
+      <p class="page-subtitle">Find amazing jobs and exclusive deals powered by AI</p>
+      
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="stat-card">
+          <i class="fas fa-briefcase"></i>
+          <div class="stat-info">
+            <span class="stat-number" id="totalJobs">1,247</span>
+            <span class="stat-label">Active Jobs</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-tags"></i>
+          <div class="stat-info">
+            <span class="stat-number" id="totalDeals">856</span>
+            <span class="stat-label">Hot Deals</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-users"></i>
+          <div class="stat-info">
+            <span class="stat-number">12,340</span>
+            <span class="stat-label">Active Users</span>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Advanced Search Section -->
+    <div class="search-section">
+      <div class="search-container">
+        <div class="search-main">
+          <i class="fas fa-search search-icon"></i>
+          <input 
+            type="text" 
+            id="search" 
+            class="search-input" 
+            placeholder="Search jobs, deals, locations..."
+            aria-label="Search jobs and deals"
+          >
+          <button class="search-voice-btn" id="voiceSearchBtn" title="Voice Search">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="btn btn-primary search-btn" id="searchBtn">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+        
+        <!-- Advanced Filters -->
+        <div class="search-filters" id="searchFilters">
+          <div class="filter-group">
+            <label class="filter-label">Type</label>
+            <select class="filter-select" id="filterType">
+              <option value="all">All Types</option>
+              <option value="job">Jobs Only</option>
+              <option value="deal">Deals Only</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Location</label>
+            <div class="location-input-group">
+              <input type="text" class="filter-input" id="filterLocation" placeholder="Enter location">
+              <button class="btn-icon" id="useCurrentLocation" title="Use current location">
+                <i class="fas fa-crosshairs"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Salary Range</label>
+            <div class="range-slider-container">
+              <input type="range" class="range-slider" id="salaryMin" min="0" max="200000" value="0">
+              <input type="range" class="range-slider" id="salaryMax" min="0" max="200000" value="200000">
+              <div class="range-values">
+                <span id="salaryMinValue">$0</span>
+                <span id="salaryMaxValue">$200k+</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Posted</label>
+            <select class="filter-select" id="filterTime">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Remote</label>
+            <div class="filter-toggles">
+              <label class="toggle-switch">
+                <input type="checkbox" id="remoteOnly">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="search-actions">
+          <button class="btn btn-ghost" id="toggleFilters">
+            <i class="fas fa-filter"></i> Advanced Filters
+          </button>
+          <button class="btn btn-outline" id="saveSearchBtn">
+            <i class="fas fa-bell"></i> Create Alert
+          </button>
+          <button class="btn btn-ghost" id="mapViewBtn">
+            <i class="fas fa-map"></i> Map View
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Recommendations -->
+    <section class="section ai-recommendations hidden" id="aiRecommendations">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-robot section-icon"></i>
+          AI Recommendations for You
+        </h2>
+        <button class="btn btn-ghost" id="refreshRecommendations">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+      <div class="recommendations-carousel">
+        <div class="carousel-container">
+          <div class="carousel-track" id="recommendationsTrack">
+            <!-- AI recommendations will be loaded here -->
+          </div>
+        </div>
+        <button class="carousel-btn prev" id="recPrevBtn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-btn next" id="recNextBtn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Trending Tags -->
+    <section class="section trending-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-fire section-icon"></i>
+          Trending Now
+        </h2>
+      </div>
+      <div class="trending-tags">
+        <button class="tag-btn trending" data-tag="remote-work">🏠 Remote Work</button>
+        <button class="tag-btn trending" data-tag="ai-ml">🤖 AI/ML</button>
+        <button class="tag-btn trending" data-tag="startup">🚀 Startup</button>
+        <button class="tag-btn trending" data-tag="tech-deals">💻 Tech Deals</button>
+        <button class="tag-btn trending" data-tag="fullstack">⚡ Full Stack</button>
+        <button class="tag-btn trending" data-tag="freelance">🎯 Freelance</button>
+        <button class="tag-btn trending" data-tag="crypto">₿ Crypto</button>
+        <button class="tag-btn trending" data-tag="saas">☁️ SaaS</button>
+      </div>
+    </section>
 
     <!-- Jobs Section -->
     <section class="section">
@@ -127,10 +314,32 @@
           <i class="fas fa-briefcase section-icon"></i>
           Featured Jobs
         </h2>
-        <div class="section-meta">
-          <span class="text-muted" id="jobsCount">Loading...</span>
+        <div class="section-actions">
+          <div class="view-toggles">
+            <button class="view-toggle active" data-view="grid">
+              <i class="fas fa-th-large"></i>
+            </button>
+            <button class="view-toggle" data-view="list">
+              <i class="fas fa-list"></i>
+            </button>
+            <button class="view-toggle" data-view="map">
+              <i class="fas fa-map"></i>
+            </button>
+          </div>
+          <select class="sort-select" id="jobsSort">
+            <option value="relevance">Most Relevant</option>
+            <option value="newest">Newest First</option>
+            <option value="salary">Highest Salary</option>
+            <option value="distance">Nearest First</option>
+          </select>
         </div>
       </div>
+      
+      <!-- Map View Container -->
+      <div id="mapContainer" class="map-container hidden">
+        <div id="map" style="height: 400px; border-radius: var(--radius-lg);"></div>
+      </div>
+      
       <div id="jobs-list" class="card-container">
         <!-- Loading state -->
         <div class="card loading">
@@ -156,8 +365,13 @@
           <i class="fas fa-tags section-icon"></i>
           Hot Deals
         </h2>
-        <div class="section-meta">
-          <span class="text-muted" id="dealsCount">Loading...</span>
+        <div class="section-actions">
+          <select class="sort-select" id="dealsSort">
+            <option value="trending">Trending</option>
+            <option value="newest">Newest First</option>
+            <option value="discount">Best Discount</option>
+            <option value="ending">Ending Soon</option>
+          </select>
         </div>
       </div>
       <div id="deals-list" class="card-container">
@@ -170,8 +384,8 @@
           <p class="card-description">Please wait while we fetch the latest deals for you.</p>
           <div class="card-meta">
             <span class="card-meta-item">
-              <i class="fas fa-map-marker-alt"></i>
-              Location
+              <i class="fas fa-clock"></i>
+              Time remaining
             </span>
           </div>
         </div>
@@ -192,6 +406,252 @@
     <i class="fas fa-plus"></i>
   </button>
 
+  <!-- 🔔 Notifications Panel -->
+  <div class="notifications-panel hidden" id="notificationsPanel">
+    <div class="panel-header">
+      <h3>Notifications</h3>
+      <button class="btn btn-ghost btn-sm" id="markAllRead">Mark all read</button>
+    </div>
+    <div class="notifications-list" id="notificationsList">
+      <!-- Notifications will be loaded here -->
+    </div>
+  </div>
+
+  <!-- 💬 Chat Widget -->
+  <div class="chat-widget hidden" id="chatWidget">
+    <div class="chat-header">
+      <div class="chat-user-info">
+        <div class="chat-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="chat-user-details">
+          <span class="chat-user-name">Support Team</span>
+          <span class="chat-status">Online</span>
+        </div>
+      </div>
+      <button class="btn-icon" id="closeChatBtn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Messages will be loaded here -->
+    </div>
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+      <button class="btn btn-primary btn-sm" id="sendMessageBtn">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 📊 Advanced Analytics Dashboard Modal -->
+  <div class="modal-overlay hidden" id="analyticsModal">
+    <div class="modal analytics-modal">
+      <div class="modal-header">
+        <h3>📊 Platform Analytics Dashboard</h3>
+        <div class="analytics-controls">
+          <select class="analytics-timeframe" id="analyticsTimeframe">
+            <option value="7d">Last 7 days</option>
+            <option value="30d" selected>Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+            <option value="1y">Last year</option>
+          </select>
+          <button class="btn btn-outline btn-sm" id="exportAnalytics">
+            <i class="fas fa-download"></i> Export
+          </button>
+        </div>
+        <button class="modal-close" id="closeAnalyticsModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content">
+        <!-- Key Metrics Overview -->
+        <div class="metrics-overview">
+          <div class="metric-card">
+            <div class="metric-icon">👥</div>
+            <div class="metric-data">
+              <span class="metric-value" id="totalUsers">2,847</span>
+              <span class="metric-label">Total Users</span>
+              <span class="metric-change positive">+12.5%</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">💼</div>
+            <div class="metric-data">
+              <span class="metric-value" id="totalJobs">1,234</span>
+              <span class="metric-label">Active Jobs</span>
+              <span class="metric-change positive">+8.3%</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">🏷️</div>
+            <div class="metric-data">
+              <span class="metric-value" id="totalDeals">567</span>
+              <span class="metric-label">Live Deals</span>
+              <span class="metric-change positive">+15.7%</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">⚡</div>
+            <div class="metric-data">
+              <span class="metric-value" id="engagementRate">89.2%</span>
+              <span class="metric-label">Engagement</span>
+              <span class="metric-change positive">+3.1%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Charts and Analytics -->
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>📈 Traffic Analytics</h4>
+              <div class="chart-legend">
+                <span class="legend-item">
+                  <span class="legend-color" style="background: #6366f1;"></span>
+                  Page Views
+                </span>
+                <span class="legend-item">
+                  <span class="legend-color" style="background: #10b981;"></span>
+                  Unique Visitors
+                </span>
+              </div>
+            </div>
+            <canvas id="trafficChart" width="400" height="200"></canvas>
+          </div>
+          
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>🎯 Category Distribution</h4>
+              <button class="btn btn-ghost btn-sm" id="toggleChartType">
+                <i class="fas fa-chart-pie"></i> Toggle View
+              </button>
+            </div>
+            <canvas id="categoryChart" width="400" height="200"></canvas>
+          </div>
+          
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>⏰ User Activity Heatmap</h4>
+              <span class="activity-info">Peak hours: 9-11 AM, 2-4 PM</span>
+            </div>
+            <div class="heatmap-container">
+              <canvas id="heatmapChart" width="400" height="150"></canvas>
+            </div>
+          </div>
+          
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>🌍 Geographic Distribution</h4>
+              <select class="region-selector" id="regionSelector">
+                <option value="world">Global</option>
+                <option value="us">United States</option>
+                <option value="eu">Europe</option>
+                <option value="asia">Asia</option>
+              </select>
+            </div>
+            <div class="geo-stats">
+              <div class="geo-item">
+                <span class="country-flag">🇺🇸</span>
+                <span class="country-name">United States</span>
+                <span class="country-percentage">34.2%</span>
+              </div>
+              <div class="geo-item">
+                <span class="country-flag">🇬🇧</span>
+                <span class="country-name">United Kingdom</span>
+                <span class="country-percentage">18.7%</span>
+              </div>
+              <div class="geo-item">
+                <span class="country-flag">🇨🇦</span>
+                <span class="country-name">Canada</span>
+                <span class="country-percentage">12.3%</span>
+              </div>
+              <div class="geo-item">
+                <span class="country-flag">🇩🇪</span>
+                <span class="country-name">Germany</span>
+                <span class="country-percentage">9.8%</span>
+              </div>
+              <div class="geo-item">
+                <span class="country-flag">🇦🇺</span>
+                <span class="country-name">Australia</span>
+                <span class="country-percentage">7.1%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>💡 AI Insights</h4>
+              <span class="insights-status">Real-time analysis</span>
+            </div>
+            <div class="insights-list">
+              <div class="insight-item">
+                <i class="fas fa-trending-up insight-icon positive"></i>
+                <div class="insight-content">
+                  <span class="insight-title">Growing Trend</span>
+                  <span class="insight-description">Remote work opportunities increased 23% this week</span>
+                </div>
+              </div>
+              <div class="insight-item">
+                <i class="fas fa-clock insight-icon warning"></i>
+                <div class="insight-content">
+                  <span class="insight-title">Peak Time</span>
+                  <span class="insight-description">Highest user activity at 10:30 AM EST</span>
+                </div>
+              </div>
+              <div class="insight-item">
+                <i class="fas fa-star insight-icon info"></i>
+                <div class="insight-content">
+                  <span class="insight-title">Popular Category</span>
+                  <span class="insight-description">Tech deals are 40% more engaging than average</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analytics-card">
+            <div class="card-header">
+              <h4>🎲 Performance Metrics</h4>
+              <button class="btn btn-ghost btn-sm" id="refreshMetrics">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+            <div class="performance-metrics">
+              <div class="performance-item">
+                <span class="performance-label">Page Load Time</span>
+                <div class="performance-bar">
+                  <div class="bar-fill" style="width: 85%; background: #10b981;"></div>
+                </div>
+                <span class="performance-value">1.2s</span>
+              </div>
+              <div class="performance-item">
+                <span class="performance-label">API Response</span>
+                <div class="performance-bar">
+                  <div class="bar-fill" style="width: 92%; background: #10b981;"></div>
+                </div>
+                <span class="performance-value">0.3s</span>
+              </div>
+              <div class="performance-item">
+                <span class="performance-label">Search Accuracy</span>
+                <div class="performance-bar">
+                  <div class="bar-fill" style="width: 96%; background: #10b981;"></div>
+                </div>
+                <span class="performance-value">96%</span>
+              </div>
+              <div class="performance-item">
+                <span class="performance-label">User Satisfaction</span>
+                <div class="performance-bar">
+                  <div class="bar-fill" style="width: 89%; background: #10b981;"></div>
+                </div>
+                <span class="performance-value">4.5/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 🔔 Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -202,35 +662,74 @@
         <div class="footer-section">
           <h3>Zendea</h3>
           <p class="text-secondary">Bridging opportunities and creating meaningful connections between people and possibilities.</p>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="post.html">Post Job/Deal</a>
-            <a href="profile.html">My Profile</a>
-            <a href="login.html">Login</a>
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="Discord">
+              <i class="fab fa-discord"></i>
+            </a>
           </div>
         </div>
         
         <div class="footer-section">
-          <h3>Support</h3>
+          <h3>For Job Seekers</h3>
           <div class="footer-links">
-            <a href="#help">Help Center</a>
-            <a href="#contact">Contact Us</a>
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
+            <a href="#browse-jobs">Browse Jobs</a>
+            <a href="#salary-insights">Salary Insights</a>
+            <a href="#career-advice">Career Advice</a>
+            <a href="#resume-builder">Resume Builder</a>
+            <a href="#job-alerts">Job Alerts</a>
           </div>
         </div>
         
         <div class="footer-section">
-          <h3>Connect</h3>
+          <h3>For Employers</h3>
           <div class="footer-links">
-            <a href="#newsletter">Newsletter</a>
+            <a href="#post-jobs">Post Jobs</a>
+            <a href="#candidate-search">Search Candidates</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#enterprise">Enterprise</a>
+            <a href="#analytics">Analytics</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <div class="footer-links">
+            <a href="#help-center">Help Center</a>
+            <a href="#api-docs">API Documentation</a>
             <a href="#blog">Blog</a>
             <a href="#community">Community</a>
-            <a href="#feedback">Feedback</a>
+            <a href="#status">Status</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Company</h3>
+          <div class="footer-links">
+            <a href="#about">About Us</a>
+            <a href="#careers">Careers</a>
+            <a href="#press">Press</a>
+            <a href="#contact">Contact</a>
+            <a href="#investors">Investors</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <div class="footer-links">
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+            <a href="#cookies">Cookie Policy</a>
+            <a href="#gdpr">GDPR</a>
+            <a href="#accessibility">Accessibility</a>
           </div>
         </div>
       </div>
@@ -239,25 +738,19 @@
         <div class="footer-copyright">
           © 2024 Zendea. All rights reserved.
         </div>
-        <div class="footer-social">
-          <a href="#" class="social-link" aria-label="Twitter">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="#" class="social-link" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="#" class="social-link" aria-label="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="#" class="social-link" aria-label="Discord">
-            <i class="fab fa-discord"></i>
-          </a>
+        <div class="footer-meta">
+          <span>Made with ❤️ for the community</span>
+          <button class="btn btn-ghost btn-sm" id="showAnalyticsBtn">
+            <i class="fas fa-chart-bar"></i> View Analytics
+          </button>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
