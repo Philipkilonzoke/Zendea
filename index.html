@@ -186,7 +186,7 @@
   </header>
 
   <!-- 🏠 Main Content -->
-  <main>
+  <main class="main-container">
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
@@ -199,6 +199,16 @@
             Find your dream job or exclusive deals with our AI-powered platform. 
             Join thousands of professionals and deal hunters worldwide.
           </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-lg hero-cta" id="getStartedBtn">
+              <i class="fas fa-rocket"></i>
+              Get Started Today
+            </button>
+            <button class="btn btn-outline btn-lg hero-cta" id="exploreBtn">
+              <i class="fas fa-search"></i>
+              Explore Opportunities
+            </button>
+          </div>
         </div>
         
         <!-- Quick Stats Cards -->
@@ -468,111 +478,190 @@
     </section>
 
     <!-- Load More Button -->
-    <div class="text-center">
-      <button id="load-more" class="btn btn-outline btn-lg">
+    <div class="load-more-container">
+      <button id="load-more" class="btn btn-outline btn-lg load-more-btn">
         <i class="fas fa-chevron-down"></i>
-        Load More
+        <span>Load More Opportunities</span>
       </button>
     </div>
 
     <!-- My Favorites Section -->
-    <section class="section hidden" id="favoritesSection">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-heart section-icon"></i>
-          My Favorites
-        </h2>
-        <div class="section-actions">
-          <button class="btn btn-outline btn-sm" id="clearFavorites">
-            <i class="fas fa-trash"></i> Clear All
-          </button>
+    <section class="section modern-section hidden" id="favoritesSection">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">
+              <i class="fas fa-heart section-icon"></i>
+              My Favorites
+            </h2>
+            <p class="section-subtitle">Posts you've saved for later</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-outline btn-sm modern-btn" id="clearFavorites">
+              <i class="fas fa-trash"></i>
+              <span>Clear All</span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div id="favorites-list" class="card-container">
-        <div class="empty-state">
-          <i class="fas fa-heart-broken"></i>
-          <h3>No favorites yet</h3>
-          <p>Start saving posts you like and they'll appear here!</p>
+        <div id="favorites-list" class="card-container modern-grid">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-heart-broken"></i>
+            </div>
+            <h3>No favorites yet</h3>
+            <p>Start saving posts you like and they'll appear here!</p>
+            <button class="btn btn-primary" onclick="showSection('home')">
+              <i class="fas fa-search"></i>
+              Browse Posts
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Feedback Section -->
-    <section class="section" id="feedbackSection">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-comment-dots section-icon"></i>
-          Send Feedback
-        </h2>
-      </div>
-      <div class="feedback-container">
-        <form id="feedbackForm" class="feedback-form">
-          <div class="form-group">
-            <label for="feedbackType">Feedback Type</label>
-            <select id="feedbackType" class="form-control" required>
-              <option value="">Select type...</option>
-              <option value="bug">Bug Report</option>
-              <option value="feature">Feature Request</option>
-              <option value="improvement">Improvement</option>
-              <option value="other">Other</option>
-            </select>
+    <section class="section modern-section hidden" id="feedbackSection">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">
+              <i class="fas fa-comment-dots section-icon"></i>
+              Send Feedback
+            </h2>
+            <p class="section-subtitle">Help us improve your experience</p>
           </div>
-          <div class="form-group">
-            <label for="feedbackTitle">Title</label>
-            <input type="text" id="feedbackTitle" class="form-control" placeholder="Brief description" required>
-          </div>
-          <div class="form-group">
-            <label for="feedbackMessage">Message</label>
-            <textarea id="feedbackMessage" class="form-control" rows="4" placeholder="Tell us more..." required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="feedbackRating">Rating</label>
-            <div class="rating-stars" id="feedbackRating">
-              <span class="star" data-rating="1">⭐</span>
-              <span class="star" data-rating="2">⭐</span>
-              <span class="star" data-rating="3">⭐</span>
-              <span class="star" data-rating="4">⭐</span>
-              <span class="star" data-rating="5">⭐</span>
+        </div>
+        <div class="feedback-container">
+          <div class="feedback-intro">
+            <div class="feedback-stats">
+              <div class="stat">
+                <span class="stat-number">4.8</span>
+                <span class="stat-label">Average Rating</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">1,247</span>
+                <span class="stat-label">Reviews</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Satisfaction</span>
+              </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i> Send Feedback
-          </button>
-        </form>
+          <form id="feedbackForm" class="feedback-form modern-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="feedbackType">
+                  <i class="fas fa-tag"></i>
+                  Feedback Type
+                </label>
+                <select id="feedbackType" class="form-control modern-select" required>
+                  <option value="">Select type...</option>
+                  <option value="bug">🐛 Bug Report</option>
+                  <option value="feature">✨ Feature Request</option>
+                  <option value="improvement">🚀 Improvement</option>
+                  <option value="other">💬 Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="feedbackRating">
+                  <i class="fas fa-star"></i>
+                  Your Rating
+                </label>
+                <div class="rating-container">
+                  <div class="rating-stars" id="feedbackRating">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                  </div>
+                  <span class="rating-text">Click to rate</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="feedbackTitle">
+                <i class="fas fa-heading"></i>
+                Title
+              </label>
+              <input type="text" id="feedbackTitle" class="form-control modern-input" placeholder="Brief description of your feedback" required>
+            </div>
+            <div class="form-group">
+              <label for="feedbackMessage">
+                <i class="fas fa-comment"></i>
+                Your Message
+              </label>
+              <textarea id="feedbackMessage" class="form-control modern-textarea" rows="5" placeholder="Tell us more about your experience..." required></textarea>
+            </div>
+            <div class="form-actions centered">
+              <button type="submit" class="btn btn-primary btn-lg modern-submit">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Feedback</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
     <!-- Messages Section -->
-    <section class="section hidden" id="messagesSection">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-envelope section-icon"></i>
-          Messages
-        </h2>
-        <div class="section-actions">
-          <button class="btn btn-primary btn-sm" id="composeMessageBtn">
-            <i class="fas fa-plus"></i> New Message
-          </button>
-        </div>
-      </div>
-      <div class="messages-container">
-        <div class="messages-sidebar">
-          <div class="conversations-list" id="conversationsList">
-            <!-- Conversations will be loaded here -->
+    <section class="section modern-section hidden" id="messagesSection">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">
+              <i class="fas fa-envelope section-icon"></i>
+              Messages
+            </h2>
+            <p class="section-subtitle">Connect with other users</p>
           </div>
-        </div>
-        <div class="message-thread" id="messageThread">
-          <div class="message-thread-header" id="messageThreadHeader">
-            <span>Select a conversation</span>
-          </div>
-          <div class="messages-list" id="messagesList">
-            <!-- Messages will be loaded here -->
-          </div>
-          <div class="message-input-container hidden" id="messageInputContainer">
-            <input type="text" class="message-input" id="messageInput" placeholder="Type a message...">
-            <button class="btn btn-primary btn-sm" id="sendMessageBtn">
-              <i class="fas fa-paper-plane"></i>
+          <div class="section-actions">
+            <button class="btn btn-primary modern-btn" id="composeMessageBtn">
+              <i class="fas fa-plus"></i>
+              <span>New Message</span>
             </button>
+          </div>
+        </div>
+        <div class="messages-container modern-messages">
+          <div class="messages-sidebar">
+            <div class="sidebar-header">
+              <h3>Conversations</h3>
+              <span class="conversation-count" id="conversationCount">0</span>
+            </div>
+            <div class="conversations-list" id="conversationsList">
+              <div class="empty-state">
+                <div class="empty-icon">
+                  <i class="fas fa-comments"></i>
+                </div>
+                <h4>No conversations yet</h4>
+                <p>Start a conversation by sending a message</p>
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('composeMessageBtn').click()">
+                  <i class="fas fa-plus"></i>
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="message-thread" id="messageThread">
+            <div class="message-thread-header" id="messageThreadHeader">
+              <div class="thread-placeholder">
+                <i class="fas fa-comments"></i>
+                <h3>Select a conversation</h3>
+                <p>Choose a conversation from the sidebar to start messaging</p>
+              </div>
+            </div>
+            <div class="messages-list" id="messagesList">
+              <!-- Messages will be loaded here -->
+            </div>
+            <div class="message-input-container hidden" id="messageInputContainer">
+              <div class="input-wrapper">
+                <input type="text" class="message-input" id="messageInput" placeholder="Type your message...">
+                <button class="btn btn-primary message-send-btn" id="sendMessageBtn">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -580,43 +669,67 @@
 
     <!-- Create Post Modal -->
     <div class="modal-overlay hidden" id="createPostModal">
-      <div class="modal">
+      <div class="modal modern-modal">
         <div class="modal-header">
-          <h3>Create New Post</h3>
+          <div class="modal-title-section">
+            <h3><i class="fas fa-plus-circle"></i> Create New Post</h3>
+            <p>Share a job opportunity or deal with the community</p>
+          </div>
           <button class="modal-close" id="closeCreatePostModal">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <div class="modal-content">
-          <form id="createPostForm">
-            <div class="form-group">
-              <label for="postType">Type</label>
-              <select id="postType" class="form-control" required>
-                <option value="">Select type...</option>
-                <option value="job">Job</option>
-                <option value="deal">Deal</option>
-              </select>
+          <form id="createPostForm" class="modern-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="postType">
+                  <i class="fas fa-tag"></i>
+                  Post Type
+                </label>
+                <select id="postType" class="form-control modern-select" required>
+                  <option value="">Select type...</option>
+                  <option value="job">💼 Job Opportunity</option>
+                  <option value="deal">🏷️ Deal/Offer</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="postLocation">
+                  <i class="fas fa-map-marker-alt"></i>
+                  Location
+                </label>
+                <input type="text" id="postLocation" class="form-control modern-input" placeholder="e.g., San Francisco, CA" required>
+              </div>
             </div>
             <div class="form-group">
-              <label for="postTitle">Title</label>
-              <input type="text" id="postTitle" class="form-control" placeholder="Enter title" required>
+              <label for="postTitle">
+                <i class="fas fa-heading"></i>
+                Title
+              </label>
+              <input type="text" id="postTitle" class="form-control modern-input" placeholder="Enter a compelling title" required>
             </div>
             <div class="form-group">
-              <label for="postDescription">Description</label>
-              <textarea id="postDescription" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+              <label for="postDescription">
+                <i class="fas fa-align-left"></i>
+                Description
+              </label>
+              <textarea id="postDescription" class="form-control modern-textarea" rows="5" placeholder="Provide detailed information about your post..." required></textarea>
             </div>
             <div class="form-group">
-              <label for="postLocation">Location</label>
-              <input type="text" id="postLocation" class="form-control" placeholder="Enter location" required>
-            </div>
-            <div class="form-group">
-              <label for="postPrice">Price/Salary</label>
-              <input type="text" id="postPrice" class="form-control" placeholder="Enter price or salary">
+              <label for="postPrice">
+                <i class="fas fa-dollar-sign"></i>
+                Price/Salary (Optional)
+              </label>
+              <input type="text" id="postPrice" class="form-control modern-input" placeholder="e.g., $75,000/year or $299">
             </div>
             <div class="form-actions">
-              <button type="button" class="btn btn-ghost" id="cancelCreatePost">Cancel</button>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Create Post
+              <button type="button" class="btn btn-ghost btn-lg" id="cancelCreatePost">
+                <i class="fas fa-times"></i>
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-rocket"></i>
+                <span>Publish Post</span>
               </button>
             </div>
           </form>
@@ -626,31 +739,48 @@
 
     <!-- Compose Message Modal -->
     <div class="modal-overlay hidden" id="composeMessageModal">
-      <div class="modal">
+      <div class="modal modern-modal">
         <div class="modal-header">
-          <h3>New Message</h3>
+          <div class="modal-title-section">
+            <h3><i class="fas fa-envelope"></i> New Message</h3>
+            <p>Send a private message to another user</p>
+          </div>
           <button class="modal-close" id="closeComposeMessageModal">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <div class="modal-content">
-          <form id="composeMessageForm">
+          <form id="composeMessageForm" class="modern-form">
             <div class="form-group">
-              <label for="messageRecipient">To</label>
-              <input type="email" id="messageRecipient" class="form-control" placeholder="Enter recipient email" required>
+              <label for="messageRecipient">
+                <i class="fas fa-user"></i>
+                To
+              </label>
+              <input type="email" id="messageRecipient" class="form-control modern-input" placeholder="Enter recipient's email address" required>
+              <small class="form-help">Enter the email address of the person you want to message</small>
             </div>
             <div class="form-group">
-              <label for="messageSubject">Subject</label>
-              <input type="text" id="messageSubject" class="form-control" placeholder="Enter subject" required>
+              <label for="messageSubject">
+                <i class="fas fa-heading"></i>
+                Subject
+              </label>
+              <input type="text" id="messageSubject" class="form-control modern-input" placeholder="Enter message subject" required>
             </div>
             <div class="form-group">
-              <label for="messageBody">Message</label>
-              <textarea id="messageBody" class="form-control" rows="6" placeholder="Type your message..." required></textarea>
+              <label for="messageBody">
+                <i class="fas fa-comment"></i>
+                Message
+              </label>
+              <textarea id="messageBody" class="form-control modern-textarea" rows="6" placeholder="Type your message here..." required></textarea>
             </div>
             <div class="form-actions">
-              <button type="button" class="btn btn-ghost" id="cancelComposeMessage">Cancel</button>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-paper-plane"></i> Send Message
+              <button type="button" class="btn btn-ghost btn-lg" id="cancelComposeMessage">
+                <i class="fas fa-times"></i>
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Message</span>
               </button>
             </div>
           </form>

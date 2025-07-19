@@ -981,10 +981,22 @@ function initFirebaseUI() {
       }
     });
 
-    // Show the main content sections
-    const mainSections = document.querySelectorAll('main > section:not(.hidden)');
+    // Handle home view specially
+    if (sectionId === 'home') {
+      // Show main content sections
+      const mainSections = document.querySelectorAll('main > section');
+      mainSections.forEach(section => {
+        if (!sections.includes(section.id)) {
+          section.style.display = 'block';
+        }
+      });
+      return;
+    }
+
+    // Hide main content sections when showing custom sections
+    const mainSections = document.querySelectorAll('main > section');
     mainSections.forEach(section => {
-      if (!section.id || !sections.includes(section.id)) {
+      if (!sections.includes(section.id)) {
         section.style.display = 'none';
       }
     });
@@ -1009,26 +1021,40 @@ function initFirebaseUI() {
     }
   }
 
+  // Hero action buttons
+  const getStartedBtn = document.getElementById('getStartedBtn');
+  const exploreBtn = document.getElementById('exploreBtn');
+
+  if (getStartedBtn) {
+    getStartedBtn.addEventListener('click', () => {
+      if (firebaseService.isAuthenticated()) {
+        // Show create post modal if authenticated
+        const createPostModal = document.getElementById('createPostModal');
+        if (createPostModal) {
+          createPostModal.classList.remove('hidden');
+        }
+      } else {
+        // Redirect to login if not authenticated
+        window.location.href = 'login.html';
+      }
+    });
+  }
+
+  if (exploreBtn) {
+    exploreBtn.addEventListener('click', () => {
+      // Scroll to jobs section
+      const jobsSection = document.querySelector('.jobs-section') || document.querySelector('main section:nth-child(2)');
+      if (jobsSection) {
+        jobsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
   // Initialize with home view
   const homeLink = document.querySelector('.nav-item[data-page="home"]');
   if (homeLink) {
     homeLink.addEventListener('click', () => {
-      // Show main sections again
-      const mainSections = document.querySelectorAll('main > section');
-      mainSections.forEach(section => {
-        if (!sections.includes(section.id)) {
-          section.style.display = 'block';
-        }
-      });
-
-      // Hide custom sections
-      sections.forEach(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          element.classList.add('hidden');
-        }
-      });
-
+      showSection('home');
       updateNavigation('');
       homeLink.classList.add('active');
     });
