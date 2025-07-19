@@ -137,11 +137,18 @@
             <span class="nav-label">Messages</span>
           </a>
           
-          <a href="#" class="nav-item" id="bookmarksLink">
+          <a href="#" class="nav-item" id="favoritesLink">
             <div class="nav-icon">
-              <i class="fas fa-bookmark"></i>
+              <i class="fas fa-heart"></i>
             </div>
-            <span class="nav-label">Saved</span>
+            <span class="nav-label">Favorites</span>
+          </a>
+          
+          <a href="#" class="nav-item" id="feedbackLink">
+            <div class="nav-icon">
+              <i class="fas fa-comment-dots"></i>
+            </div>
+            <span class="nav-label">Feedback</span>
           </a>
         </div>
         
@@ -467,6 +474,190 @@
         Load More
       </button>
     </div>
+
+    <!-- My Favorites Section -->
+    <section class="section hidden" id="favoritesSection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-heart section-icon"></i>
+          My Favorites
+        </h2>
+        <div class="section-actions">
+          <button class="btn btn-outline btn-sm" id="clearFavorites">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+      </div>
+      <div id="favorites-list" class="card-container">
+        <div class="empty-state">
+          <i class="fas fa-heart-broken"></i>
+          <h3>No favorites yet</h3>
+          <p>Start saving posts you like and they'll appear here!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="section" id="feedbackSection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-comment-dots section-icon"></i>
+          Send Feedback
+        </h2>
+      </div>
+      <div class="feedback-container">
+        <form id="feedbackForm" class="feedback-form">
+          <div class="form-group">
+            <label for="feedbackType">Feedback Type</label>
+            <select id="feedbackType" class="form-control" required>
+              <option value="">Select type...</option>
+              <option value="bug">Bug Report</option>
+              <option value="feature">Feature Request</option>
+              <option value="improvement">Improvement</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="feedbackTitle">Title</label>
+            <input type="text" id="feedbackTitle" class="form-control" placeholder="Brief description" required>
+          </div>
+          <div class="form-group">
+            <label for="feedbackMessage">Message</label>
+            <textarea id="feedbackMessage" class="form-control" rows="4" placeholder="Tell us more..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="feedbackRating">Rating</label>
+            <div class="rating-stars" id="feedbackRating">
+              <span class="star" data-rating="1">⭐</span>
+              <span class="star" data-rating="2">⭐</span>
+              <span class="star" data-rating="3">⭐</span>
+              <span class="star" data-rating="4">⭐</span>
+              <span class="star" data-rating="5">⭐</span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Send Feedback
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Messages Section -->
+    <section class="section hidden" id="messagesSection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-envelope section-icon"></i>
+          Messages
+        </h2>
+        <div class="section-actions">
+          <button class="btn btn-primary btn-sm" id="composeMessageBtn">
+            <i class="fas fa-plus"></i> New Message
+          </button>
+        </div>
+      </div>
+      <div class="messages-container">
+        <div class="messages-sidebar">
+          <div class="conversations-list" id="conversationsList">
+            <!-- Conversations will be loaded here -->
+          </div>
+        </div>
+        <div class="message-thread" id="messageThread">
+          <div class="message-thread-header" id="messageThreadHeader">
+            <span>Select a conversation</span>
+          </div>
+          <div class="messages-list" id="messagesList">
+            <!-- Messages will be loaded here -->
+          </div>
+          <div class="message-input-container hidden" id="messageInputContainer">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type a message...">
+            <button class="btn btn-primary btn-sm" id="sendMessageBtn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Create Post Modal -->
+    <div class="modal-overlay hidden" id="createPostModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Create New Post</h3>
+          <button class="modal-close" id="closeCreatePostModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-content">
+          <form id="createPostForm">
+            <div class="form-group">
+              <label for="postType">Type</label>
+              <select id="postType" class="form-control" required>
+                <option value="">Select type...</option>
+                <option value="job">Job</option>
+                <option value="deal">Deal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="postTitle">Title</label>
+              <input type="text" id="postTitle" class="form-control" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+              <label for="postDescription">Description</label>
+              <textarea id="postDescription" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="postLocation">Location</label>
+              <input type="text" id="postLocation" class="form-control" placeholder="Enter location" required>
+            </div>
+            <div class="form-group">
+              <label for="postPrice">Price/Salary</label>
+              <input type="text" id="postPrice" class="form-control" placeholder="Enter price or salary">
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost" id="cancelCreatePost">Cancel</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Post
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compose Message Modal -->
+    <div class="modal-overlay hidden" id="composeMessageModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>New Message</h3>
+          <button class="modal-close" id="closeComposeMessageModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-content">
+          <form id="composeMessageForm">
+            <div class="form-group">
+              <label for="messageRecipient">To</label>
+              <input type="email" id="messageRecipient" class="form-control" placeholder="Enter recipient email" required>
+            </div>
+            <div class="form-group">
+              <label for="messageSubject">Subject</label>
+              <input type="text" id="messageSubject" class="form-control" placeholder="Enter subject" required>
+            </div>
+            <div class="form-group">
+              <label for="messageBody">Message</label>
+              <textarea id="messageBody" class="form-control" rows="6" placeholder="Type your message..." required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost" id="cancelComposeMessage">Cancel</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Send Message
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- 🎈 Floating Action Button -->
@@ -887,6 +1078,33 @@
   </footer>
 
   <!-- Scripts -->
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+    
+    // Firebase configuration (replace with your actual config)
+    const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "your-app-id"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+    
+    // Make Firebase services globally available
+    window.firebase = { app, db, auth, storage };
+  </script>
+  
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js"></script>
