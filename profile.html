@@ -1,24 +1,351 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zendea — My Profile</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — Zendea</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Manage your job postings and deals on Zendea. View, edit, and track your opportunities.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- 🎯 Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <a href="index.html" class="logo">Zendea</a>
+        <span class="tagline">Bridging Opportunities</span>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="post.html" class="nav-link">
+            <i class="fas fa-plus"></i> Post
+          </a>
+          <a href="profile.html" class="nav-link active">
+            <i class="fas fa-user"></i> Profile
+          </a>
+          <a href="#" class="nav-link" id="logoutLink">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+        
+        <div class="user-greeting" id="userGreeting">
+          Welcome, <span class="user-name" id="userName">User</span>!
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-sun"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-<header>
-  <h1>Zendea</h1>
-  <p>Bridging Opportunities</p>
-</header>
+  <!-- 🏠 Main Content -->
+  <main>
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-details">
+          <h1 class="profile-name" id="profileName">Loading...</h1>
+          <p class="profile-email" id="profileEmail">Loading...</p>
+          <div class="profile-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="totalPosts">0</span>
+              <span class="stat-label">Total Posts</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="activePosts">0</span>
+              <span class="stat-label">Active</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="totalViews">0</span>
+              <span class="stat-label">Views</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-outline" id="editProfileBtn">
+          <i class="fas fa-edit"></i>
+          Edit Profile
+        </button>
+        <a href="post.html" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          New Post
+        </a>
+      </div>
+    </div>
 
-<main>
-  <h2>My Posts</h2>
-  <div id="my-posts" class="card-container">Loading your posts…</div>
-</main>
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h2 class="section-title">
+          <i class="fas fa-bolt"></i>
+          Quick Actions
+        </h2>
+        <div class="action-grid">
+          <a href="post.html?type=job" class="action-card">
+            <i class="fas fa-briefcase"></i>
+            <div>
+              <h3>Post a Job</h3>
+              <p>Share employment opportunities</p>
+            </div>
+          </a>
+          <a href="post.html?type=deal" class="action-card">
+            <i class="fas fa-tags"></i>
+            <div>
+              <h3>Post a Deal</h3>
+              <p>Share amazing discounts</p>
+            </div>
+          </a>
+          <button class="action-card" id="importPostBtn">
+            <i class="fas fa-file-import"></i>
+            <div>
+              <h3>Import Posts</h3>
+              <p>Bulk upload from CSV</p>
+            </div>
+          </button>
+          <button class="action-card" id="analyticsBtn">
+            <i class="fas fa-chart-line"></i>
+            <div>
+              <h3>View Analytics</h3>
+              <p>Track your performance</p>
+            </div>
+          </button>
+        </div>
+      </div>
 
-<script type="module" src="profile.js"></script>
+      <!-- Posts Management -->
+      <div class="posts-management">
+        <div class="posts-header">
+          <h2 class="section-title">
+            <i class="fas fa-list"></i>
+            My Posts
+          </h2>
+          <div class="posts-controls">
+            <div class="search-filter">
+              <input 
+                type="text" 
+                id="postSearch" 
+                class="form-input" 
+                placeholder="Search your posts..."
+              >
+              <select id="postFilter" class="form-select">
+                <option value="all">All Posts</option>
+                <option value="job">Jobs Only</option>
+                <option value="deal">Deals Only</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              <select id="postSort" class="form-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="title">Title A-Z</option>
+                <option value="views">Most Views</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts Grid -->
+        <div id="my-posts" class="posts-grid">
+          <!-- Loading state -->
+          <div class="post-card loading">
+            <div class="post-card-header">
+              <span class="post-type job">Job</span>
+              <div class="post-actions">
+                <button class="btn-icon" disabled>
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-icon" disabled>
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon" disabled>
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <h3 class="post-title">Loading your posts...</h3>
+            <p class="post-description">Please wait while we fetch your posts.</p>
+            <div class="post-meta">
+              <span class="meta-item">
+                <i class="fas fa-calendar"></i>
+                Loading...
+              </span>
+              <span class="meta-item">
+                <i class="fas fa-eye"></i>
+                0 views
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state hidden" id="emptyState">
+          <div class="empty-icon">
+            <i class="fas fa-inbox"></i>
+          </div>
+          <h3>No Posts Yet</h3>
+          <p>Start by creating your first post to share opportunities with the community.</p>
+          <a href="post.html" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Create Your First Post
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message" class="message-container"></div>
+  </main>
+
+  <!-- 🔔 Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 🎈 Floating Action Button -->
+  <a href="post.html" class="fab" id="fab" aria-label="Create new post">
+    <i class="fas fa-plus"></i>
+  </a>
+
+  <!-- 📝 Edit Profile Modal -->
+  <div class="modal-overlay hidden" id="editProfileModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button class="modal-close" id="closeEditModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content">
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label for="editName" class="form-label">
+              <i class="fas fa-user"></i>
+              Display Name
+            </label>
+            <input 
+              type="text" 
+              id="editName" 
+              class="form-input" 
+              placeholder="Your display name"
+            >
+          </div>
+          <div class="form-group">
+            <label for="editBio" class="form-label">
+              <i class="fas fa-info-circle"></i>
+              Bio
+            </label>
+            <textarea 
+              id="editBio" 
+              class="form-textarea" 
+              placeholder="Tell us about yourself..."
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="editLocation" class="form-label">
+              <i class="fas fa-map-marker-alt"></i>
+              Location
+            </label>
+            <input 
+              type="text" 
+              id="editLocation" 
+              class="form-input" 
+              placeholder="Your location"
+            >
+          </div>
+          <div class="form-group">
+            <label for="editWebsite" class="form-label">
+              <i class="fas fa-globe"></i>
+              Website
+            </label>
+            <input 
+              type="url" 
+              id="editWebsite" 
+              class="form-input" 
+              placeholder="https://yourwebsite.com"
+            >
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelEditBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" form="editProfileForm">
+          <i class="fas fa-save"></i>
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🦶 Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Zendea</h3>
+          <p class="text-secondary">Bridging opportunities and creating meaningful connections.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Dashboard</h3>
+          <div class="footer-links">
+            <a href="post.html">Create Post</a>
+            <a href="#analytics">Analytics</a>
+            <a href="#settings">Settings</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Support</h3>
+          <div class="footer-links">
+            <a href="#help">Help Center</a>
+            <a href="#contact">Contact Support</a>
+            <a href="#feedback">Send Feedback</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2024 Zendea. All rights reserved.
+        </div>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="profile.js"></script>
 </body>
 </html>

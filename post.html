@@ -1,37 +1,327 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zendea — Post Job/Deal</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Post — Zendea</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Post a job opportunity or deal on Zendea. Share opportunities and connect with your community.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- 🎯 Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <a href="index.html" class="logo">Zendea</a>
+        <span class="tagline">Bridging Opportunities</span>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="post.html" class="nav-link active">
+            <i class="fas fa-plus"></i> Post
+          </a>
+          <a href="profile.html" class="nav-link">
+            <i class="fas fa-user"></i> Profile
+          </a>
+          <a href="login.html" class="nav-link" id="authLink">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+        </div>
+        
+        <div class="user-greeting hidden" id="userGreeting">
+          Welcome, <span class="user-name" id="userName">User</span>!
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-sun"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-<header>
-  <h1>Zendea</h1>
-  <p>Bridging Opportunities</p>
-</header>
+  <!-- 🏠 Main Content -->
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">Create New Post</h1>
+      <p class="page-subtitle">Share a job opportunity or an amazing deal with the community</p>
+    </div>
 
-<main>
-  <h2>Post Job or Deal</h2>
+    <!-- Post Form Container -->
+    <div class="form-container">
+      <div class="post-card">
+        <form class="post-form" id="postForm">
+          <!-- Post Type Selection -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-tag"></i>
+              What are you posting?
+            </label>
+            <div class="post-type-selector">
+              <input type="radio" name="type" value="job" id="typeJob" checked>
+              <label for="typeJob" class="post-type-option">
+                <i class="fas fa-briefcase"></i>
+                <div>
+                  <h3>Job Opportunity</h3>
+                  <p>Share employment opportunities</p>
+                </div>
+              </label>
+              
+              <input type="radio" name="type" value="deal" id="typeDeal">
+              <label for="typeDeal" class="post-type-option">
+                <i class="fas fa-tags"></i>
+                <div>
+                  <h3>Great Deal</h3>
+                  <p>Share discounts and offers</p>
+                </div>
+              </label>
+            </div>
+          </div>
 
-  <select id="type">
-    <option value="job">Job</option>
-    <option value="deal">Deal</option>
-  </select>
+          <!-- Title -->
+          <div class="form-group">
+            <label for="title" class="form-label">
+              <i class="fas fa-heading"></i>
+              Title
+            </label>
+            <input 
+              type="text" 
+              id="title" 
+              class="form-input" 
+              placeholder="Enter a compelling title..."
+              required
+              maxlength="100"
+            >
+            <div class="form-helper">
+              <span class="text-muted">Make it clear and engaging</span>
+              <span class="char-count" id="titleCount">0/100</span>
+            </div>
+          </div>
 
-  <input type="text" id="title" placeholder="Title">
-  <textarea id="description" placeholder="Description"></textarea>
-  <input type="text" id="location" placeholder="Location">
-  <input type="text" id="price" placeholder="Salary/Price">
-  <input type="file" id="image">
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description" class="form-label">
+              <i class="fas fa-align-left"></i>
+              Description
+            </label>
+            <textarea 
+              id="description" 
+              class="form-textarea" 
+              placeholder="Provide detailed information..."
+              required
+              maxlength="1000"
+              rows="6"
+            ></textarea>
+            <div class="form-helper">
+              <span class="text-muted">Include all relevant details</span>
+              <span class="char-count" id="descriptionCount">0/1000</span>
+            </div>
+          </div>
 
-  <button id="post-btn">Post</button>
-  <p id="message"></p>
-</main>
+          <!-- Location -->
+          <div class="form-group">
+            <label for="location" class="form-label">
+              <i class="fas fa-map-marker-alt"></i>
+              Location
+            </label>
+            <input 
+              type="text" 
+              id="location" 
+              class="form-input" 
+              placeholder="City, State or Remote"
+              required
+            >
+            <div class="form-helper">Specify where this opportunity is available</div>
+          </div>
 
-<script type="module" src="post.js"></script>
+          <!-- Price/Salary -->
+          <div class="form-group">
+            <label for="price" class="form-label">
+              <i class="fas fa-dollar-sign"></i>
+              <span id="priceLabel">Salary</span>
+            </label>
+            <div class="price-input-group">
+              <span class="price-prefix">$</span>
+              <input 
+                type="text" 
+                id="price" 
+                class="form-input price-input" 
+                placeholder="Enter amount..."
+              >
+              <select id="priceType" class="price-type">
+                <option value="hourly">per hour</option>
+                <option value="daily">per day</option>
+                <option value="monthly">per month</option>
+                <option value="yearly" selected>per year</option>
+                <option value="fixed">one time</option>
+              </select>
+            </div>
+            <div class="form-helper" id="priceHelper">Specify the compensation or price</div>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-image"></i>
+              Image (Optional)
+            </label>
+            <div class="image-upload-area" id="imageUploadArea">
+              <div class="upload-placeholder">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>Upload an Image</h4>
+                <p>Drag and drop or click to browse</p>
+                <small>PNG, JPG up to 5MB</small>
+              </div>
+              <input type="file" id="image" accept="image/*" hidden>
+            </div>
+            <div class="image-preview hidden" id="imagePreview">
+              <img id="previewImg" src="" alt="Preview">
+              <button type="button" class="remove-image" id="removeImage">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Additional Options -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-cog"></i>
+              Additional Options
+            </label>
+            <div class="form-options-grid">
+              <label class="checkbox-label">
+                <input type="checkbox" id="isUrgent">
+                <span class="checkbox-custom"></span>
+                Mark as urgent
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="allowContact">
+                <span class="checkbox-custom"></span>
+                Allow direct contact
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="isRemote">
+                <span class="checkbox-custom"></span>
+                Remote work available
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="emailNotifications" checked>
+                <span class="checkbox-custom"></span>
+                Email notifications
+              </label>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="previewBtn">
+              <i class="fas fa-eye"></i>
+              Preview
+            </button>
+            <button type="button" class="btn btn-outline" id="saveDraftBtn">
+              <i class="fas fa-save"></i>
+              Save Draft
+            </button>
+            <button type="submit" class="btn btn-primary" id="postBtn">
+              <i class="fas fa-paper-plane"></i>
+              Publish Post
+            </button>
+          </div>
+        </form>
+
+        <!-- Preview Section -->
+        <div class="post-preview hidden" id="postPreview">
+          <h3>Preview</h3>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-type" id="previewType">job</span>
+            </div>
+            <img class="card-image hidden" id="previewImage" src="" alt="">
+            <h3 class="card-title" id="previewTitle">Title will appear here</h3>
+            <p class="card-description" id="previewDescription">Description will appear here</p>
+            <div class="card-meta">
+              <span class="card-meta-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="previewLocation">Location</span>
+              </span>
+              <span class="card-price" id="previewPrice">$0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message" class="message-container"></div>
+  </main>
+
+  <!-- 🔔 Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 🦶 Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Zendea</h3>
+          <p class="text-secondary">Bridging opportunities and creating meaningful connections.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">My Posts</a>
+            <a href="#help">Help Center</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Guidelines</h3>
+          <div class="footer-links">
+            <a href="#posting-tips">Posting Tips</a>
+            <a href="#community">Community Rules</a>
+            <a href="#best-practices">Best Practices</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2024 Zendea. All rights reserved.
+        </div>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="post.js"></script>
 </body>
 </html>

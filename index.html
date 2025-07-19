@@ -1,47 +1,263 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zendea — Jobs & Deals</title>
-<meta name="description" content="Zendea connects you to jobs and deals quickly and easily.">
-<meta property="og:title" content="Zendea — Jobs & Deals">
-<meta property="og:description" content="Find and post jobs & deals instantly.">
-<meta property="og:image" content="https://yourdomain.com/og-image.jpg">
-<link rel="stylesheet" href="style.css">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zendea — Find Jobs & Deals That Matter</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Discover amazing job opportunities and exclusive deals on Zendea. Connect, explore, and find what matters to you.">
+  <meta name="keywords" content="jobs, deals, opportunities, employment, discounts, marketplace">
+  <meta property="og:title" content="Zendea — Find Jobs & Deals That Matter">
+  <meta property="og:description" content="Discover amazing job opportunities and exclusive deals on Zendea.">
+  <meta property="og:image" content="https://zendea.com/og-image.jpg">
+  <meta property="og:url" content="https://zendea.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zendea — Find Jobs & Deals That Matter">
+  <meta name="twitter:description" content="Discover amazing job opportunities and exclusive deals on Zendea.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
-
-<header>
-  <h1>Zendea</h1>
-  <p>Bridging Opportunities</p>
-  <div id="auth-links">
-    <a href="login.html">Login / Signup</a> | <a href="profile.html">My Profile</a>
+  <!-- 🎬 Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-logo">Zendea</div>
   </div>
-</header>
 
-<main>
-  <input type="text" id="search" placeholder="Search jobs & deals...">
-  <section>
-    <h2>Jobs</h2>
-    <div id="jobs-list" class="card-container">Loading jobs…</div>
-  </section>
+  <!-- 🎪 Welcome Screen (for guests) -->
+  <div class="welcome-overlay hidden" id="welcomeOverlay">
+    <div class="welcome-content">
+      <div class="welcome-logo">Zendea</div>
+      <p class="welcome-tagline">Bridging Opportunities, Creating Connections</p>
+      <div class="welcome-buttons">
+        <a href="login.html" class="welcome-btn primary">
+          <i class="fas fa-sign-in-alt"></i> Get Started
+        </a>
+        <button class="welcome-btn" id="continueAsGuest">
+          <i class="fas fa-eye"></i> Browse as Guest
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <section>
-    <h2>Deals</h2>
-    <div id="deals-list" class="card-container">Loading deals…</div>
-  </section>
-  <button id="load-more">Load More</button>
-</main>
+  <!-- 🎯 Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <a href="index.html" class="logo">Zendea</a>
+        <span class="tagline">Bridging Opportunities</span>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link active">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="post.html" class="nav-link" id="postLink">
+            <i class="fas fa-plus"></i> Post
+          </a>
+          <a href="profile.html" class="nav-link" id="profileLink">
+            <i class="fas fa-user"></i> Profile
+          </a>
+          <a href="login.html" class="nav-link" id="authLink">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+        </div>
+        
+        <div class="user-greeting hidden" id="userGreeting">
+          Welcome back, <span class="user-name" id="userName">User</span>!
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-sun"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-<script type="module" src="app.js"></script>
+  <!-- 🏠 Main Content -->
+  <main>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Discover Opportunities</h1>
+      <p class="page-subtitle">Find amazing jobs and exclusive deals in one place</p>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          id="search" 
+          class="search-input" 
+          placeholder="Search jobs, deals, locations..."
+          aria-label="Search jobs and deals"
+        >
+      </div>
+    </div>
+
+    <!-- Jobs Section -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-briefcase section-icon"></i>
+          Featured Jobs
+        </h2>
+        <div class="section-meta">
+          <span class="text-muted" id="jobsCount">Loading...</span>
+        </div>
+      </div>
+      <div id="jobs-list" class="card-container">
+        <!-- Loading state -->
+        <div class="card loading">
+          <div class="card-header">
+            <span class="card-type job">Job</span>
+          </div>
+          <h3 class="card-title">Loading amazing opportunities...</h3>
+          <p class="card-description">Please wait while we fetch the latest job postings for you.</p>
+          <div class="card-meta">
+            <span class="card-meta-item">
+              <i class="fas fa-map-marker-alt"></i>
+              Location
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deals Section -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-tags section-icon"></i>
+          Hot Deals
+        </h2>
+        <div class="section-meta">
+          <span class="text-muted" id="dealsCount">Loading...</span>
+        </div>
+      </div>
+      <div id="deals-list" class="card-container">
+        <!-- Loading state -->
+        <div class="card loading">
+          <div class="card-header">
+            <span class="card-type deal">Deal</span>
+          </div>
+          <h3 class="card-title">Loading exclusive deals...</h3>
+          <p class="card-description">Please wait while we fetch the latest deals for you.</p>
+          <div class="card-meta">
+            <span class="card-meta-item">
+              <i class="fas fa-map-marker-alt"></i>
+              Location
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Load More Button -->
+    <div class="text-center">
+      <button id="load-more" class="btn btn-outline btn-lg">
+        <i class="fas fa-chevron-down"></i>
+        Load More
+      </button>
+    </div>
+  </main>
+
+  <!-- 🎈 Floating Action Button -->
+  <button class="fab hidden" id="fab" aria-label="Create new post">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <!-- 🔔 Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 🦶 Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Zendea</h3>
+          <p class="text-secondary">Bridging opportunities and creating meaningful connections between people and possibilities.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="post.html">Post Job/Deal</a>
+            <a href="profile.html">My Profile</a>
+            <a href="login.html">Login</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Support</h3>
+          <div class="footer-links">
+            <a href="#help">Help Center</a>
+            <a href="#contact">Contact Us</a>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <div class="footer-links">
+            <a href="#newsletter">Newsletter</a>
+            <a href="#blog">Blog</a>
+            <a href="#community">Community</a>
+            <a href="#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2024 Zendea. All rights reserved.
+        </div>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="Discord">
+            <i class="fab fa-discord"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="app.js"></script>
 </body>
 </html>
