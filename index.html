@@ -5,7 +5,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zendea — Jobs & Deals</title>
+<meta name="description" content="Zendea connects you to jobs and deals quickly and easily.">
+<meta property="og:title" content="Zendea — Jobs & Deals">
+<meta property="og:description" content="Find and post jobs & deals instantly.">
+<meta property="og:image" content="https://yourdomain.com/og-image.jpg">
 <link rel="stylesheet" href="style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
 </head>
 <body>
 
@@ -13,11 +24,12 @@
   <h1>Zendea</h1>
   <p>Bridging Opportunities</p>
   <div id="auth-links">
-    <a href="login.html">Login / Signup</a>
+    <a href="login.html">Login / Signup</a> | <a href="profile.html">My Profile</a>
   </div>
 </header>
 
 <main>
+  <input type="text" id="search" placeholder="Search jobs & deals...">
   <section>
     <h2>Jobs</h2>
     <div id="jobs-list" class="card-container">Loading jobs…</div>
@@ -27,6 +39,7 @@
     <h2>Deals</h2>
     <div id="deals-list" class="card-container">Loading deals…</div>
   </section>
+  <button id="load-more">Load More</button>
 </main>
 
 <script type="module" src="app.js"></script>
