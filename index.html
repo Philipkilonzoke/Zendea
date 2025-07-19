@@ -91,50 +91,88 @@
     </div>
   </div>
 
-  <!-- 🎯 Header -->
-  <header>
+  <!-- 🎯 Professional Header -->
+  <header class="main-header">
     <div class="header-container">
+      <!-- Logo Section -->
       <div class="logo-section">
-        <a href="index.html" class="logo">Zendea</a>
-        <span class="tagline">Bridging Opportunities</span>
+        <a href="index.html" class="logo-link">
+          <div class="logo-icon">Z</div>
+          <div class="logo-text">
+            <span class="logo-name">Zendea</span>
+            <span class="logo-tagline">Bridging Opportunities</span>
+          </div>
+        </a>
       </div>
       
-      <nav class="nav-section">
+      <!-- Main Navigation -->
+      <nav class="main-navigation">
         <div class="nav-links">
-          <a href="index.html" class="nav-link active">
-            <i class="fas fa-home"></i> Home
+          <a href="index.html" class="nav-item active" data-page="home">
+            <div class="nav-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <span class="nav-label">Home</span>
           </a>
-          <a href="post.html" class="nav-link" id="postLink">
-            <i class="fas fa-plus"></i> Post
-          </a>
-          <a href="profile.html" class="nav-link" id="profileLink">
-            <i class="fas fa-user"></i> Profile
-          </a>
-          <a href="#" class="nav-link" id="messagesLink">
-            <i class="fas fa-comments"></i> Messages
-            <span class="notification-badge hidden" id="messagesBadge">3</span>
-          </a>
-          <a href="#" class="nav-link" id="bookmarksLink">
-            <i class="fas fa-bookmark"></i> Saved
-          </a>
-          <a href="login.html" class="nav-link" id="authLink">
-            <i class="fas fa-sign-in-alt"></i> Login
-          </a>
-        </div>
-        
-        <div class="user-greeting hidden" id="userGreeting">
-          Welcome back, <span class="user-name" id="userName">User</span>!
-        </div>
-        
-        <div class="header-actions">
-          <button class="btn-icon notification-btn" id="notificationBtn" title="Notifications">
-            <i class="fas fa-bell"></i>
-            <span class="notification-badge" id="notificationBadge">2</span>
-          </button>
           
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <i class="fas fa-sun"></i>
-          </button>
+          <a href="post.html" class="nav-item" data-page="post" id="postLink">
+            <div class="nav-icon">
+              <i class="fas fa-plus-circle"></i>
+            </div>
+            <span class="nav-label">Create</span>
+          </a>
+          
+          <a href="profile.html" class="nav-item" data-page="profile" id="profileLink">
+            <div class="nav-icon">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <span class="nav-label">Profile</span>
+          </a>
+          
+          <a href="#" class="nav-item" id="messagesLink">
+            <div class="nav-icon">
+              <i class="fas fa-comments"></i>
+              <span class="notification-dot hidden" id="messagesBadge"></span>
+            </div>
+            <span class="nav-label">Messages</span>
+          </a>
+          
+          <a href="#" class="nav-item" id="bookmarksLink">
+            <div class="nav-icon">
+              <i class="fas fa-bookmark"></i>
+            </div>
+            <span class="nav-label">Saved</span>
+          </a>
+        </div>
+        
+        <!-- User Section -->
+        <div class="user-section">
+          <div class="user-greeting hidden" id="userGreeting">
+            <div class="user-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+              <span class="user-welcome">Welcome back,</span>
+              <span class="user-name" id="userName">User</span>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="header-actions">
+            <button class="action-btn notification-btn" id="notificationBtn" title="Notifications">
+              <i class="fas fa-bell"></i>
+              <span class="notification-dot" id="notificationBadge"></span>
+            </button>
+            
+            <button class="action-btn theme-toggle" id="themeToggle" title="Toggle theme">
+              <i class="fas fa-moon"></i>
+            </button>
+            
+            <a href="login.html" class="action-btn login-btn" id="authLink" title="Sign in">
+              <i class="fas fa-sign-in-alt"></i>
+              <span class="btn-text">Sign In</span>
+            </a>
+          </div>
         </div>
       </nav>
     </div>
@@ -142,36 +180,66 @@
 
   <!-- 🏠 Main Content -->
   <main>
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">Discover Opportunities</h1>
-      <p class="page-subtitle">Find amazing jobs and exclusive deals powered by AI</p>
-      
-      <!-- Quick Stats -->
-      <div class="quick-stats">
-        <div class="stat-card">
-          <i class="fas fa-briefcase"></i>
-          <div class="stat-info">
-            <span class="stat-number" id="totalJobs">1,247</span>
-            <span class="stat-label">Active Jobs</span>
-          </div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            Discover Amazing
+            <span class="gradient-text">Opportunities</span>
+          </h1>
+          <p class="hero-subtitle">
+            Find your dream job or exclusive deals with our AI-powered platform. 
+            Join thousands of professionals and deal hunters worldwide.
+          </p>
         </div>
-        <div class="stat-card">
-          <i class="fas fa-tags"></i>
-          <div class="stat-info">
-            <span class="stat-number" id="totalDeals">856</span>
-            <span class="stat-label">Hot Deals</span>
+        
+        <!-- Quick Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="totalJobs">1,247</span>
+              <span class="stat-label">Active Jobs</span>
+            </div>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+12%</span>
+            </div>
           </div>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-users"></i>
-          <div class="stat-info">
-            <span class="stat-number">12,340</span>
-            <span class="stat-label">Active Users</span>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-tags"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="totalDeals">856</span>
+              <span class="stat-label">Hot Deals</span>
+            </div>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+18%</span>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number">12,340</span>
+              <span class="stat-label">Active Users</span>
+            </div>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+25%</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Advanced Search Section -->
     <div class="search-section">
@@ -655,94 +723,157 @@
   <!-- 🔔 Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- 🦶 Footer -->
-  <footer class="footer">
+  <!-- 🦶 Professional Footer -->
+  <footer class="main-footer">
     <div class="footer-container">
+      <!-- Footer Main Content -->
       <div class="footer-content">
-        <div class="footer-section">
-          <h3>Zendea</h3>
-          <p class="text-secondary">Bridging opportunities and creating meaningful connections between people and possibilities.</p>
-          <div class="footer-social">
-            <a href="#" class="social-link" aria-label="Twitter">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="social-link" aria-label="LinkedIn">
-              <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="#" class="social-link" aria-label="GitHub">
-              <i class="fab fa-github"></i>
-            </a>
-            <a href="#" class="social-link" aria-label="Discord">
-              <i class="fab fa-discord"></i>
-            </a>
+        <!-- Brand Section -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="logo-icon">Z</div>
+            <div class="logo-text">
+              <span class="logo-name">Zendea</span>
+              <span class="logo-tagline">Bridging Opportunities</span>
+            </div>
+          </div>
+          <p class="brand-description">
+            Connecting talented professionals with amazing opportunities and exclusive deals. 
+            Your gateway to success in the digital marketplace.
+          </p>
+          
+          <!-- Contact Information -->
+          <div class="contact-info">
+            <h4>Get in Touch</h4>
+            <div class="contact-item">
+              <i class="fab fa-whatsapp"></i>
+              <a href="https://wa.me/254791943551" target="_blank" rel="noopener">
+                +254 791 943 551
+              </a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-instagram"></i>
+              <a href="https://instagram.com/philipkilonzo.ke" target="_blank" rel="noopener">
+                @philipkilonzo.ke
+              </a>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:hello@zendea.com">
+                hello@zendea.com
+              </a>
+            </div>
           </div>
         </div>
         
-        <div class="footer-section">
-          <h3>For Job Seekers</h3>
-          <div class="footer-links">
-            <a href="#browse-jobs">Browse Jobs</a>
-            <a href="#salary-insights">Salary Insights</a>
-            <a href="#career-advice">Career Advice</a>
-            <a href="#resume-builder">Resume Builder</a>
-            <a href="#job-alerts">Job Alerts</a>
+        <!-- Quick Links -->
+        <div class="footer-links-section">
+          <div class="footer-column">
+            <h4>For Job Seekers</h4>
+            <ul class="footer-links">
+              <li><a href="#browse-jobs">Browse Jobs</a></li>
+              <li><a href="#remote-jobs">Remote Opportunities</a></li>
+              <li><a href="#salary-insights">Salary Insights</a></li>
+              <li><a href="#career-advice">Career Advice</a></li>
+              <li><a href="#resume-builder">Resume Builder</a></li>
+              <li><a href="#job-alerts">Job Alerts</a></li>
+            </ul>
           </div>
-        </div>
-        
-        <div class="footer-section">
-          <h3>For Employers</h3>
-          <div class="footer-links">
-            <a href="#post-jobs">Post Jobs</a>
-            <a href="#candidate-search">Search Candidates</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#enterprise">Enterprise</a>
-            <a href="#analytics">Analytics</a>
+          
+          <div class="footer-column">
+            <h4>For Employers</h4>
+            <ul class="footer-links">
+              <li><a href="#post-jobs">Post Jobs</a></li>
+              <li><a href="#find-talent">Find Talent</a></li>
+              <li><a href="#employer-branding">Employer Branding</a></li>
+              <li><a href="#pricing">Pricing Plans</a></li>
+              <li><a href="#enterprise">Enterprise Solutions</a></li>
+              <li><a href="#recruitment-api">Recruitment API</a></li>
+            </ul>
           </div>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Resources</h3>
-          <div class="footer-links">
-            <a href="#help-center">Help Center</a>
-            <a href="#api-docs">API Documentation</a>
-            <a href="#blog">Blog</a>
-            <a href="#community">Community</a>
-            <a href="#status">Status</a>
+          
+          <div class="footer-column">
+            <h4>Marketplace</h4>
+            <ul class="footer-links">
+              <li><a href="#deals">Hot Deals</a></li>
+              <li><a href="#categories">Categories</a></li>
+              <li><a href="#trending">Trending Now</a></li>
+              <li><a href="#price-alerts">Price Alerts</a></li>
+              <li><a href="#seller-dashboard">Seller Dashboard</a></li>
+              <li><a href="#deal-alerts">Deal Notifications</a></li>
+            </ul>
           </div>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Company</h3>
-          <div class="footer-links">
-            <a href="#about">About Us</a>
-            <a href="#careers">Careers</a>
-            <a href="#press">Press</a>
-            <a href="#contact">Contact</a>
-            <a href="#investors">Investors</a>
+          
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul class="footer-links">
+              <li><a href="#about">About Zendea</a></li>
+              <li><a href="#our-story">Our Story</a></li>
+              <li><a href="#careers">Join Our Team</a></li>
+              <li><a href="#press">Press & Media</a></li>
+              <li><a href="#investors">Investors</a></li>
+              <li><a href="#community">Community</a></li>
+            </ul>
           </div>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Legal</h3>
-          <div class="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#cookies">Cookie Policy</a>
-            <a href="#gdpr">GDPR</a>
-            <a href="#accessibility">Accessibility</a>
+          
+          <div class="footer-column">
+            <h4>Support & Legal</h4>
+            <ul class="footer-links">
+              <li><a href="#help">Help Center</a></li>
+              <li><a href="#contact">Contact Support</a></li>
+              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><a href="#terms">Terms of Service</a></li>
+              <li><a href="#cookies">Cookie Policy</a></li>
+              <li><a href="#accessibility">Accessibility</a></li>
+            </ul>
           </div>
         </div>
       </div>
       
+      <!-- Footer Bottom -->
       <div class="footer-bottom">
-        <div class="footer-copyright">
-          © 2024 Zendea. All rights reserved.
-        </div>
-        <div class="footer-meta">
-          <span>Made with ❤️ for the community</span>
-          <button class="btn btn-ghost btn-sm" id="showAnalyticsBtn">
-            <i class="fas fa-chart-bar"></i> View Analytics
-          </button>
+        <div class="footer-bottom-content">
+          <div class="footer-copyright">
+            <p>© 2024 Zendea Platform. All rights reserved.</p>
+            <p class="made-with-love">Made with ❤️ in Kenya</p>
+          </div>
+          
+          <!-- Social Links -->
+          <div class="footer-social">
+            <h5>Follow Us</h5>
+            <div class="social-links">
+              <a href="https://wa.me/254791943551" class="social-link whatsapp" title="WhatsApp" target="_blank" rel="noopener">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+              <a href="https://instagram.com/philipkilonzo.ke" class="social-link instagram" title="Instagram" target="_blank" rel="noopener">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" class="social-link twitter" title="Twitter" target="_blank" rel="noopener">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="social-link linkedin" title="LinkedIn" target="_blank" rel="noopener">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="#" class="social-link facebook" title="Facebook" target="_blank" rel="noopener">
+                <i class="fab fa-facebook"></i>
+              </a>
+              <a href="#" class="social-link youtube" title="YouTube" target="_blank" rel="noopener">
+                <i class="fab fa-youtube"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Additional Actions -->
+          <div class="footer-actions">
+            <button class="btn btn-outline btn-sm" id="showAnalyticsBtn">
+              <i class="fas fa-chart-bar"></i>
+              <span>Platform Analytics</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+              <i class="fas fa-arrow-up"></i>
+              <span>Back to Top</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1947,14 +1947,14 @@ function initFAB() {
 
 function initNavigation() {
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  const navLinks = document.querySelectorAll('.nav-link');
+  const navItems = document.querySelectorAll('.nav-item');
   
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href');
+  navItems.forEach(item => {
+    const href = item.getAttribute('href');
     if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-      link.classList.add('active');
+      item.classList.add('active');
     } else {
-      link.classList.remove('active');
+      item.classList.remove('active');
     }
   });
 }
