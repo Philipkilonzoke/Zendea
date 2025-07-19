@@ -1,31 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zendea — Jobs & Deals</title>
-<style>
-body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-h2 { color: #2b7a78; }
-hr { margin: 10px 0; }
-a { text-decoration: none; color: #0077cc; }
-button { padding: 5px 10px; margin: 10px 0; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Zendea</h1>
-<p><em>Bridging Opportunities</em></p>
+<header>
+  <h1>Zendea</h1>
+  <p>Bridging Opportunities</p>
+  <div id="auth-links">
+    <a href="login.html">Login / Signup</a>
+  </div>
+</header>
 
-<div id="auth-links">
-  <a href="login.html">Login / Signup</a>
-</div>
+<main>
+  <section>
+    <h2>Jobs</h2>
+    <div id="jobs-list" class="card-container">Loading jobs…</div>
+  </section>
 
-<h2>Jobs</h2>
-<div id="jobs-list">Loading jobs…</div>
-
-<h2>Deals</h2>
-<div id="deals-list">Loading deals…</div>
+  <section>
+    <h2>Deals</h2>
+    <div id="deals-list" class="card-container">Loading deals…</div>
+  </section>
+</main>
 
 <script type="module" src="app.js"></script>
 </body>
