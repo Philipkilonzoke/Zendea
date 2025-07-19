@@ -2,6 +2,1156 @@
 // 🚀 ZENDEA - ADVANCED APPLICATION SCRIPT
 // ===================================
 
+// 🔥 Firebase Services & Collections Management
+class FirebaseService {
+  constructor() {
+    this.db = null;
+    this.auth = null;
+    this.currentUser = null;
+    this.init();
+  }
+
+  init() {
+    // Wait for Firebase to be loaded
+    const waitForFirebase = () => {
+      if (window.firebase) {
+        this.db = window.firebase.db;
+        this.auth = window.firebase.auth;
+        this.setupAuthListener();
+        console.log('✅ Firebase services initialized');
+      } else {
+        setTimeout(waitForFirebase, 100);
+      }
+    };
+    waitForFirebase();
+  }
+
+  setupAuthListener() {
+    window.firebase.onAuthStateChanged(this.auth, (user) => {
+      this.currentUser = user;
+      if (user) {
+        this.saveUserInfo(user);
+        this.loadUserData();
+        this.showAuthenticatedUI();
+        console.log('✅ User authenticated:', user.email);
+      } else {
+        this.showGuestUI();
+        console.log('ℹ️ User not authenticated');
+      }
+    });
+  }
+
+  // 👤 Users Collection Management
+  async saveUserInfo(user) {
+    try {
+      const userRef = window.firebase.doc(this.db, 'users', user.uid);
+      await window.firebase.updateDoc(userRef, {
+        name: user.displayName || user.email.split('@')[0],
+        email: user.email,
+        lastLogin: window.firebase.serverTimestamp(),
+        role: 'user' // Default role, can be updated to 'admin' later
+      }).catch(async () => {
+        // If document doesn't exist, create it
+        await window.firebase.addDoc(window.firebase.collection(this.db, 'users'), {
+          uid: user.uid,
+          name: user.displayName || user.email.split('@')[0],
+          email: user.email,
+          createdAt: window.firebase.serverTimestamp(),
+          lastLogin: window.firebase.serverTimestamp(),
+          role: 'user'
+        });
+      });
+      
+      this.trackAnalytics('user_login', { userId: user.uid });
+    } catch (error) {
+      console.error('Error saving user info:', error);
+    }
+  }
+
+  // 📄 Posts Collection Management
+  async createPost(postData) {
+    if (!this.currentUser) {
+      showToast('Please sign in to create posts', 'error');
+      return null;
+    }
+
+    try {
+      const post = {
+        title: postData.title,
+        description: postData.description,
+        type: postData.type,
+        location: postData.location,
+        price: postData.price || '',
+        postedBy: this.currentUser.uid,
+        postedByName: this.currentUser.displayName || this.currentUser.email.split('@')[0],
+        createdAt: window.firebase.serverTimestamp(),
+        status: 'active'
+      };
+
+      const docRef = await window.firebase.addDoc(window.firebase.collection(this.db, 'posts'), post);
+      
+      // Send notification about new post
+      await this.createNotification({
+        title: 'New Post Created',
+        message: `Your ${postData.type} post "${postData.title}" has been published`,
+        type: 'post_created',
+        userId: this.currentUser.uid
+      });
+
+      this.trackAnalytics('post_created', { 
+        postId: docRef.id, 
+        postType: postData.type,
+        userId: this.currentUser.uid 
+      });
+
+      showToast('Post created successfully!', 'success');
+      return docRef.id;
+    } catch (error) {
+      console.error('Error creating post:', error);
+      showToast('Failed to create post', 'error');
+      return null;
+    }
+  }
+
+  async loadPosts() {
+    try {
+      const q = window.firebase.query(
+        window.firebase.collection(this.db, 'posts'),
+        window.firebase.where('status', '==', 'active'),
+        window.firebase.orderBy('createdAt', 'desc'),
+        window.firebase.limit(20)
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(q);
+      const posts = [];
+      
+      querySnapshot.forEach((doc) => {
+        posts.push({ id: doc.id, ...doc.data() });
+      });
+      
+      this.displayPosts(posts);
+      return posts;
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      showToast('Failed to load posts', 'error');
+      return [];
+    }
+  }
+
+  async editPost(postId, updateData) {
+    if (!this.currentUser) return false;
+
+    try {
+      const postRef = window.firebase.doc(this.db, 'posts', postId);
+      await window.firebase.updateDoc(postRef, {
+        ...updateData,
+        updatedAt: window.firebase.serverTimestamp()
+      });
+
+      this.trackAnalytics('post_edited', { postId, userId: this.currentUser.uid });
+      showToast('Post updated successfully!', 'success');
+      return true;
+    } catch (error) {
+      console.error('Error editing post:', error);
+      showToast('Failed to update post', 'error');
+      return false;
+    }
+  }
+
+  async deletePost(postId) {
+    if (!this.currentUser) return false;
+
+    try {
+      await window.firebase.deleteDoc(window.firebase.doc(this.db, 'posts', postId));
+      
+      this.trackAnalytics('post_deleted', { postId, userId: this.currentUser.uid });
+      showToast('Post deleted successfully!', 'success');
+      return true;
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      showToast('Failed to delete post', 'error');
+      return false;
+    }
+  }
+
+  // 🔔 Notifications Collection Management
+  async createNotification(notificationData) {
+    try {
+      await window.firebase.addDoc(window.firebase.collection(this.db, 'notifications'), {
+        ...notificationData,
+        createdAt: window.firebase.serverTimestamp(),
+        read: false
+      });
+    } catch (error) {
+      console.error('Error creating notification:', error);
+    }
+  }
+
+  async loadNotifications() {
+    if (!this.currentUser) return [];
+
+    try {
+      const q = window.firebase.query(
+        window.firebase.collection(this.db, 'notifications'),
+        window.firebase.where('userId', '==', this.currentUser.uid),
+        window.firebase.orderBy('createdAt', 'desc'),
+        window.firebase.limit(20)
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(q);
+      const notifications = [];
+      
+      querySnapshot.forEach((doc) => {
+        notifications.push({ id: doc.id, ...doc.data() });
+      });
+      
+      this.displayNotifications(notifications);
+      return notifications;
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+      return [];
+    }
+  }
+
+  async markNotificationAsRead(notificationId) {
+    try {
+      const notificationRef = window.firebase.doc(this.db, 'notifications', notificationId);
+      await window.firebase.updateDoc(notificationRef, { read: true });
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  }
+
+  // 💬 Feedback Collection Management
+  async submitFeedback(feedbackData) {
+    if (!this.currentUser) {
+      showToast('Please sign in to submit feedback', 'error');
+      return false;
+    }
+
+    try {
+      await window.firebase.addDoc(window.firebase.collection(this.db, 'feedback'), {
+        ...feedbackData,
+        userId: this.currentUser.uid,
+        userEmail: this.currentUser.email,
+        createdAt: window.firebase.serverTimestamp(),
+        status: 'pending'
+      });
+
+      this.trackAnalytics('feedback_submitted', { 
+        feedbackType: feedbackData.type,
+        userId: this.currentUser.uid 
+      });
+
+      showToast('Feedback submitted successfully! Thank you!', 'success');
+      return true;
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      showToast('Failed to submit feedback', 'error');
+      return false;
+    }
+  }
+
+  // ❤️ Favorites Collection Management
+  async toggleFavorite(postId) {
+    if (!this.currentUser) {
+      showToast('Please sign in to save favorites', 'error');
+      return false;
+    }
+
+    try {
+      const favoriteId = `${this.currentUser.uid}_${postId}`;
+      const favoriteRef = window.firebase.doc(this.db, 'favorites', favoriteId);
+      
+      // Check if already favorited
+      const favoriteDoc = await window.firebase.getDocs(
+        window.firebase.query(
+          window.firebase.collection(this.db, 'favorites'),
+          window.firebase.where('userId', '==', this.currentUser.uid),
+          window.firebase.where('postId', '==', postId)
+        )
+      );
+
+      if (!favoriteDoc.empty) {
+        // Remove from favorites
+        await window.firebase.deleteDoc(favoriteDoc.docs[0].ref);
+        showToast('Removed from favorites', 'info');
+        return false;
+      } else {
+        // Add to favorites
+        await window.firebase.addDoc(window.firebase.collection(this.db, 'favorites'), {
+          userId: this.currentUser.uid,
+          postId: postId,
+          createdAt: window.firebase.serverTimestamp()
+        });
+        showToast('Added to favorites!', 'success');
+        return true;
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      showToast('Failed to update favorites', 'error');
+      return false;
+    }
+  }
+
+  async loadFavorites() {
+    if (!this.currentUser) return [];
+
+    try {
+      const q = window.firebase.query(
+        window.firebase.collection(this.db, 'favorites'),
+        window.firebase.where('userId', '==', this.currentUser.uid),
+        window.firebase.orderBy('createdAt', 'desc')
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(q);
+      const favoritePostIds = [];
+      
+      querySnapshot.forEach((doc) => {
+        favoritePostIds.push(doc.data().postId);
+      });
+      
+      // Load the actual posts
+      if (favoritePostIds.length > 0) {
+        const favoritePosts = [];
+        for (const postId of favoritePostIds) {
+          const postDoc = await window.firebase.getDocs(
+            window.firebase.query(
+              window.firebase.collection(this.db, 'posts'),
+              window.firebase.where('__name__', '==', postId)
+            )
+          );
+          if (!postDoc.empty) {
+            favoritePosts.push({ id: postDoc.docs[0].id, ...postDoc.docs[0].data() });
+          }
+        }
+        this.displayFavorites(favoritePosts);
+        return favoritePosts;
+      }
+      
+      return [];
+    } catch (error) {
+      console.error('Error loading favorites:', error);
+      return [];
+    }
+  }
+
+  // 📊 Analytics Collection Management
+  async trackAnalytics(event, data = {}) {
+    if (!ZendeaApp.config.analyticsEnabled) return;
+
+    try {
+      await window.firebase.addDoc(window.firebase.collection(this.db, 'analytics'), {
+        event,
+        data,
+        userId: this.currentUser?.uid || 'anonymous',
+        timestamp: window.firebase.serverTimestamp(),
+        userAgent: navigator.userAgent,
+        page: window.location.pathname
+      });
+    } catch (error) {
+      console.error('Error tracking analytics:', error);
+    }
+  }
+
+  // 💌 Messages Collection Management
+  async sendMessage(recipientEmail, subject, message) {
+    if (!this.currentUser) {
+      showToast('Please sign in to send messages', 'error');
+      return false;
+    }
+
+    try {
+      // Find recipient user
+      const recipientQuery = window.firebase.query(
+        window.firebase.collection(this.db, 'users'),
+        window.firebase.where('email', '==', recipientEmail)
+      );
+      
+      const recipientSnapshot = await window.firebase.getDocs(recipientQuery);
+      
+      if (recipientSnapshot.empty) {
+        showToast('Recipient not found', 'error');
+        return false;
+      }
+
+      const recipientId = recipientSnapshot.docs[0].data().uid;
+
+      await window.firebase.addDoc(window.firebase.collection(this.db, 'messages'), {
+        senderId: this.currentUser.uid,
+        senderEmail: this.currentUser.email,
+        recipientId: recipientId,
+        recipientEmail: recipientEmail,
+        subject: subject,
+        message: message,
+        createdAt: window.firebase.serverTimestamp(),
+        read: false
+      });
+
+      // Create notification for recipient
+      await this.createNotification({
+        title: 'New Message',
+        message: `You have a new message from ${this.currentUser.email}`,
+        type: 'message_received',
+        userId: recipientId
+      });
+
+      this.trackAnalytics('message_sent', { recipientId });
+      showToast('Message sent successfully!', 'success');
+      return true;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      showToast('Failed to send message', 'error');
+      return false;
+    }
+  }
+
+  async loadMessages() {
+    if (!this.currentUser) return [];
+
+    try {
+      const q = window.firebase.query(
+        window.firebase.collection(this.db, 'messages'),
+        window.firebase.where('recipientId', '==', this.currentUser.uid),
+        window.firebase.orderBy('createdAt', 'desc')
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(q);
+      const messages = [];
+      
+      querySnapshot.forEach((doc) => {
+        messages.push({ id: doc.id, ...doc.data() });
+      });
+      
+      this.displayMessages(messages);
+      return messages;
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      return [];
+    }
+  }
+
+  // UI Helper Methods
+  showAuthenticatedUI() {
+    const fab = document.getElementById('fab');
+    const userGreeting = document.getElementById('userGreeting');
+    const authLink = document.getElementById('authLink');
+    
+    if (fab) fab.classList.remove('hidden');
+    if (userGreeting) {
+      userGreeting.classList.remove('hidden');
+      const userName = document.getElementById('userName');
+      if (userName) {
+        userName.textContent = this.currentUser.displayName || this.currentUser.email.split('@')[0];
+      }
+    }
+    if (authLink) {
+      authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i><span class="btn-text">Sign Out</span>';
+      authLink.onclick = () => this.signOut();
+    }
+  }
+
+  showGuestUI() {
+    const fab = document.getElementById('fab');
+    const userGreeting = document.getElementById('userGreeting');
+    const authLink = document.getElementById('authLink');
+    
+    if (fab) fab.classList.add('hidden');
+    if (userGreeting) userGreeting.classList.add('hidden');
+    if (authLink) {
+      authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i><span class="btn-text">Sign In</span>';
+      authLink.onclick = () => window.location.href = 'login.html';
+    }
+  }
+
+  async signOut() {
+    try {
+      await window.firebase.signOut(this.auth);
+      showToast('Signed out successfully', 'success');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error signing out:', error);
+      showToast('Failed to sign out', 'error');
+    }
+  }
+
+  displayPosts(posts) {
+    const jobsList = document.getElementById('jobs-list');
+    const dealsList = document.getElementById('deals-list');
+    
+    if (jobsList) jobsList.innerHTML = '';
+    if (dealsList) dealsList.innerHTML = '';
+
+    posts.forEach(post => {
+      const postElement = this.createPostElement(post);
+      if (post.type === 'job' && jobsList) {
+        jobsList.appendChild(postElement);
+      } else if (post.type === 'deal' && dealsList) {
+        dealsList.appendChild(postElement);
+      }
+    });
+  }
+
+  createPostElement(post) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="card-type ${post.type}">${post.type}</span>
+        ${this.currentUser && this.currentUser.uid === post.postedBy ? `
+          <div class="card-actions">
+            <button class="btn-icon edit-btn" onclick="firebaseService.editPost('${post.id}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon delete-btn" onclick="firebaseService.deletePost('${post.id}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        ` : ''}
+      </div>
+      <h3 class="card-title">${post.title}</h3>
+      <p class="card-description">${post.description}</p>
+      <div class="card-meta">
+        <span class="card-meta-item">
+          <i class="fas fa-map-marker-alt"></i>
+          ${post.location}
+        </span>
+        <span class="card-meta-item">
+          <i class="fas fa-user"></i>
+          ${post.postedByName}
+        </span>
+        ${post.price ? `
+          <span class="card-meta-item">
+            <i class="fas fa-dollar-sign"></i>
+            ${post.price}
+          </span>
+        ` : ''}
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline btn-sm favorite-btn" onclick="firebaseService.toggleFavorite('${post.id}')">
+          <i class="fas fa-heart"></i> Save
+        </button>
+        <button class="btn btn-primary btn-sm">
+          <i class="fas fa-eye"></i> View Details
+        </button>
+      </div>
+    `;
+    return card;
+  }
+
+  displayNotifications(notifications) {
+    const notificationsList = document.getElementById('notificationsList');
+    if (!notificationsList) return;
+
+    notificationsList.innerHTML = '';
+
+    notifications.forEach(notification => {
+      const notificationElement = document.createElement('div');
+      notificationElement.className = `notification ${notification.read ? 'read' : 'unread'}`;
+      notificationElement.innerHTML = `
+        <div class="notification-content">
+          <h4>${notification.title}</h4>
+          <p>${notification.message}</p>
+          <span class="notification-time">${this.formatDate(notification.createdAt)}</span>
+        </div>
+        ${!notification.read ? `
+          <button class="btn btn-sm" onclick="firebaseService.markNotificationAsRead('${notification.id}')">
+            Mark as read
+          </button>
+        ` : ''}
+      `;
+      notificationsList.appendChild(notificationElement);
+    });
+  }
+
+  displayFavorites(favorites) {
+    const favoritesList = document.getElementById('favorites-list');
+    if (!favoritesList) return;
+
+    favoritesList.innerHTML = '';
+
+    if (favorites.length === 0) {
+      favoritesList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-heart-broken"></i>
+          <h3>No favorites yet</h3>
+          <p>Start saving posts you like and they'll appear here!</p>
+        </div>
+      `;
+      return;
+    }
+
+    favorites.forEach(post => {
+      const postElement = this.createPostElement(post);
+      favoritesList.appendChild(postElement);
+    });
+  }
+
+  displayMessages(messages) {
+    const conversationsList = document.getElementById('conversationsList');
+    if (!conversationsList) return;
+
+    conversationsList.innerHTML = '';
+
+    messages.forEach(message => {
+      const messageElement = document.createElement('div');
+      messageElement.className = `conversation ${!message.read ? 'unread' : ''}`;
+      messageElement.innerHTML = `
+        <div class="conversation-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="conversation-content">
+          <h4>${message.senderEmail}</h4>
+          <p>${message.subject}</p>
+          <span class="conversation-time">${this.formatDate(message.createdAt)}</span>
+        </div>
+      `;
+      messageElement.onclick = () => this.openMessage(message);
+      conversationsList.appendChild(messageElement);
+    });
+  }
+
+  formatDate(timestamp) {
+    if (!timestamp) return '';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+  }
+
+  openMessage(message) {
+    const messageThread = document.getElementById('messageThread');
+    const messageThreadHeader = document.getElementById('messageThreadHeader');
+    const messagesList = document.getElementById('messagesList');
+    const messageInputContainer = document.getElementById('messageInputContainer');
+
+    if (messageThreadHeader) {
+      messageThreadHeader.innerHTML = `
+        <div class="message-header-info">
+          <h4>${message.senderEmail}</h4>
+          <p>${message.subject}</p>
+        </div>
+      `;
+    }
+
+    if (messagesList) {
+      messagesList.innerHTML = `
+        <div class="message-bubble">
+          <div class="message-sender">${message.senderEmail}</div>
+          <div class="message-content">${message.message}</div>
+          <div class="message-time">${this.formatDate(message.createdAt)}</div>
+        </div>
+      `;
+    }
+
+    if (messageInputContainer) {
+      messageInputContainer.classList.remove('hidden');
+    }
+
+    // Mark message as read
+    this.markMessageAsRead(message.id);
+  }
+
+  async markMessageAsRead(messageId) {
+    try {
+      const messageRef = window.firebase.doc(this.db, 'messages', messageId);
+      await window.firebase.updateDoc(messageRef, { read: true });
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
+  }
+
+  // Check if user is authenticated
+  isAuthenticated() {
+    return this.currentUser !== null;
+  }
+
+  // Get current user info
+  getCurrentUser() {
+    return this.currentUser;
+  }
+
+  async loadUserData() {
+    if (!this.currentUser) return;
+    
+    await Promise.all([
+      this.loadPosts(),
+      this.loadNotifications(),
+      this.loadFavorites(),
+      this.loadMessages()
+    ]);
+  }
+
+  // Admin-only notification (for future admin features)
+  async createAdminNotification(title, message) {
+    try {
+      // Get all users
+      const usersQuery = window.firebase.query(
+        window.firebase.collection(this.db, 'users')
+      );
+      
+      const usersSnapshot = await window.firebase.getDocs(usersQuery);
+      
+      // Send notification to all users
+      const promises = [];
+      usersSnapshot.forEach((userDoc) => {
+        const userData = userDoc.data();
+        promises.push(
+          window.firebase.addDoc(window.firebase.collection(this.db, 'notifications'), {
+            title: title,
+            message: message,
+            type: 'admin_announcement',
+            userId: userData.uid,
+            createdAt: window.firebase.serverTimestamp(),
+            read: false
+          })
+        );
+      });
+      
+      await Promise.all(promises);
+      console.log('✅ Admin notification sent to all users');
+    } catch (error) {
+      console.error('Error creating admin notification:', error);
+    }
+  }
+}
+
+// Initialize Firebase Service
+const firebaseService = new FirebaseService();
+
+// 🎯 UI Event Handlers for Firebase Features
+document.addEventListener('DOMContentLoaded', function() {
+  initFirebaseUI();
+});
+
+function initFirebaseUI() {
+  // Navigation handlers
+  const messagesLink = document.getElementById('messagesLink');
+  const favoritesLink = document.getElementById('favoritesLink');
+  const feedbackLink = document.getElementById('feedbackLink');
+  const fab = document.getElementById('fab');
+  const notificationBtn = document.getElementById('notificationBtn');
+
+  // Modal handlers
+  const createPostModal = document.getElementById('createPostModal');
+  const composeMessageModal = document.getElementById('composeMessageModal');
+  const closeCreatePostModal = document.getElementById('closeCreatePostModal');
+  const closeComposeMessageModal = document.getElementById('closeComposeMessageModal');
+  const cancelCreatePost = document.getElementById('cancelCreatePost');
+  const cancelComposeMessage = document.getElementById('cancelComposeMessage');
+
+  // Form handlers
+  const createPostForm = document.getElementById('createPostForm');
+  const feedbackForm = document.getElementById('feedbackForm');
+  const composeMessageForm = document.getElementById('composeMessageForm');
+  const composeMessageBtn = document.getElementById('composeMessageBtn');
+
+  // Section visibility handlers
+  const sections = ['messagesSection', 'favoritesSection', 'feedbackSection'];
+  
+  if (messagesLink) {
+    messagesLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection('messagesSection');
+      updateNavigation('messagesLink');
+    });
+  }
+
+  if (favoritesLink) {
+    favoritesLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection('favoritesSection');
+      updateNavigation('favoritesLink');
+      firebaseService.loadFavorites();
+    });
+  }
+
+  if (feedbackLink) {
+    feedbackLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection('feedbackSection');
+      updateNavigation('feedbackLink');
+    });
+  }
+
+  // FAB click handler
+  if (fab) {
+    fab.addEventListener('click', () => {
+      if (createPostModal) {
+        createPostModal.classList.remove('hidden');
+      }
+    });
+  }
+
+  // Notification panel toggle
+  if (notificationBtn) {
+    notificationBtn.addEventListener('click', () => {
+      const notificationsPanel = document.getElementById('notificationsPanel');
+      if (notificationsPanel) {
+        notificationsPanel.classList.toggle('hidden');
+        if (!notificationsPanel.classList.contains('hidden')) {
+          firebaseService.loadNotifications();
+        }
+      }
+    });
+  }
+
+  // Modal close handlers
+  if (closeCreatePostModal || cancelCreatePost) {
+    [closeCreatePostModal, cancelCreatePost].forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          if (createPostModal) {
+            createPostModal.classList.add('hidden');
+            document.getElementById('createPostForm')?.reset();
+          }
+        });
+      }
+    });
+  }
+
+  if (closeComposeMessageModal || cancelComposeMessage) {
+    [closeComposeMessageModal, cancelComposeMessage].forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          if (composeMessageModal) {
+            composeMessageModal.classList.add('hidden');
+            document.getElementById('composeMessageForm')?.reset();
+          }
+        });
+      }
+    });
+  }
+
+  if (composeMessageBtn) {
+    composeMessageBtn.addEventListener('click', () => {
+      if (composeMessageModal) {
+        composeMessageModal.classList.remove('hidden');
+      }
+    });
+  }
+
+  // Form submission handlers
+  if (createPostForm) {
+    createPostForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(createPostForm);
+      const postData = {
+        title: document.getElementById('postTitle')?.value,
+        description: document.getElementById('postDescription')?.value,
+        type: document.getElementById('postType')?.value,
+        location: document.getElementById('postLocation')?.value,
+        price: document.getElementById('postPrice')?.value
+      };
+
+      if (!postData.title || !postData.description || !postData.type || !postData.location) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      const postId = await firebaseService.createPost(postData);
+      if (postId) {
+        createPostModal.classList.add('hidden');
+        createPostForm.reset();
+        firebaseService.loadPosts(); // Refresh posts
+      }
+    });
+  }
+
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const feedbackData = {
+        type: document.getElementById('feedbackType')?.value,
+        title: document.getElementById('feedbackTitle')?.value,
+        message: document.getElementById('feedbackMessage')?.value,
+        rating: getSelectedRating()
+      };
+
+      if (!feedbackData.type || !feedbackData.title || !feedbackData.message) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      const success = await firebaseService.submitFeedback(feedbackData);
+      if (success) {
+        feedbackForm.reset();
+        resetRatingStars();
+      }
+    });
+  }
+
+  if (composeMessageForm) {
+    composeMessageForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const messageData = {
+        recipientEmail: document.getElementById('messageRecipient')?.value,
+        subject: document.getElementById('messageSubject')?.value,
+        message: document.getElementById('messageBody')?.value
+      };
+
+      if (!messageData.recipientEmail || !messageData.subject || !messageData.message) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      const success = await firebaseService.sendMessage(
+        messageData.recipientEmail, 
+        messageData.subject, 
+        messageData.message
+      );
+      
+      if (success) {
+        composeMessageModal.classList.add('hidden');
+        composeMessageForm.reset();
+      }
+    });
+  }
+
+  // Rating stars functionality
+  const ratingStars = document.querySelectorAll('.star');
+  let selectedRating = 0;
+
+  ratingStars.forEach((star, index) => {
+    star.addEventListener('click', () => {
+      selectedRating = index + 1;
+      updateRatingStars(selectedRating);
+    });
+
+    star.addEventListener('mouseover', () => {
+      updateRatingStars(index + 1);
+    });
+  });
+
+  const ratingContainer = document.getElementById('feedbackRating');
+  if (ratingContainer) {
+    ratingContainer.addEventListener('mouseleave', () => {
+      updateRatingStars(selectedRating);
+    });
+  }
+
+  function updateRatingStars(rating) {
+    ratingStars.forEach((star, index) => {
+      if (index < rating) {
+        star.style.color = '#ffd700';
+        star.textContent = '★';
+      } else {
+        star.style.color = '#ddd';
+        star.textContent = '☆';
+      }
+    });
+  }
+
+  function getSelectedRating() {
+    return selectedRating;
+  }
+
+  function resetRatingStars() {
+    selectedRating = 0;
+    updateRatingStars(0);
+  }
+
+  // Clear favorites handler
+  const clearFavorites = document.getElementById('clearFavorites');
+  if (clearFavorites) {
+    clearFavorites.addEventListener('click', async () => {
+      if (confirm('Are you sure you want to clear all favorites?')) {
+        // This would need a bulk delete method in Firebase service
+        showToast('Feature coming soon!', 'info');
+      }
+    });
+  }
+
+  // Mark all notifications as read
+  const markAllRead = document.getElementById('markAllRead');
+  if (markAllRead) {
+    markAllRead.addEventListener('click', async () => {
+      // This would need a bulk update method in Firebase service
+      showToast('Feature coming soon!', 'info');
+    });
+  }
+
+  function showSection(sectionId) {
+    // Hide all sections first
+    sections.forEach(section => {
+      const element = document.getElementById(section);
+      if (element) {
+        element.classList.add('hidden');
+      }
+    });
+
+    // Show the main content sections
+    const mainSections = document.querySelectorAll('main > section:not(.hidden)');
+    mainSections.forEach(section => {
+      if (!section.id || !sections.includes(section.id)) {
+        section.style.display = 'none';
+      }
+    });
+
+    // Show the requested section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+      targetSection.classList.remove('hidden');
+      targetSection.style.display = 'block';
+    }
+  }
+
+  function updateNavigation(activeLink) {
+    // Remove active class from all nav items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => item.classList.remove('active'));
+
+    // Add active class to clicked item
+    const activeNavItem = document.getElementById(activeLink);
+    if (activeNavItem) {
+      activeNavItem.classList.add('active');
+    }
+  }
+
+  // Initialize with home view
+  const homeLink = document.querySelector('.nav-item[data-page="home"]');
+  if (homeLink) {
+    homeLink.addEventListener('click', () => {
+      // Show main sections again
+      const mainSections = document.querySelectorAll('main > section');
+      mainSections.forEach(section => {
+        if (!sections.includes(section.id)) {
+          section.style.display = 'block';
+        }
+      });
+
+      // Hide custom sections
+      sections.forEach(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          element.classList.add('hidden');
+        }
+      });
+
+      updateNavigation('');
+      homeLink.classList.add('active');
+    });
+  }
+}
+
+// Global helper function for toast notifications (if not already defined)
+function showToast(message, type = 'info', duration = 3000, action = null) {
+  // Create toast element
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-content">
+      <span class="toast-message">${message}</span>
+      ${action ? `<button class="toast-action" onclick="${action.action}">${action.text}</button>` : ''}
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+
+  // Add to document
+  document.body.appendChild(toast);
+
+  // Auto remove
+  setTimeout(() => {
+    if (toast.parentElement) {
+      toast.remove();
+    }
+  }, duration);
+}
+
+// Enhanced trackEvent function for analytics
+function trackEvent(eventName, data = {}) {
+  if (window.firebaseService) {
+    firebaseService.trackAnalytics(eventName, data);
+  }
+  
+  // Also track with Google Analytics if available
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventName, data);
+  }
+}
+
+// Initialize app when Firebase is ready
+function initializeApp() {
+  // Wait for Firebase service to be ready
+  const checkFirebaseReady = () => {
+    if (window.firebaseService && window.firebaseService.db) {
+      // Load initial posts for guest users
+      firebaseService.loadPosts();
+      
+      // Set up real-time listeners for authenticated users
+      if (firebaseService.isAuthenticated()) {
+        setupRealtimeListeners();
+      }
+      
+      console.log('✅ Zendea app initialized with Firebase');
+    } else {
+      setTimeout(checkFirebaseReady, 500);
+    }
+  };
+  checkFirebaseReady();
+}
+
+// Setup real-time listeners for live updates
+function setupRealtimeListeners() {
+  if (!window.firebase || !firebaseService.currentUser) return;
+
+  // Listen for new notifications
+  const notificationsQuery = window.firebase.query(
+    window.firebase.collection(firebaseService.db, 'notifications'),
+    window.firebase.where('userId', '==', firebaseService.currentUser.uid),
+    window.firebase.where('read', '==', false)
+  );
+  
+  window.firebase.onSnapshot(notificationsQuery, (snapshot) => {
+    const unreadCount = snapshot.size;
+    updateNotificationBadge(unreadCount);
+  });
+
+  // Listen for new messages
+  const messagesQuery = window.firebase.query(
+    window.firebase.collection(firebaseService.db, 'messages'),
+    window.firebase.where('recipientId', '==', firebaseService.currentUser.uid),
+    window.firebase.where('read', '==', false)
+  );
+  
+  window.firebase.onSnapshot(messagesQuery, (snapshot) => {
+    const unreadCount = snapshot.size;
+    updateMessagesBadge(unreadCount);
+  });
+
+  console.log('✅ Real-time listeners setup complete');
+}
+
+function updateNotificationBadge(count) {
+  const badge = document.getElementById('notificationBadge');
+  if (badge) {
+    if (count > 0) {
+      badge.classList.remove('hidden');
+      badge.textContent = count > 9 ? '9+' : count;
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+}
+
+function updateMessagesBadge(count) {
+  const badge = document.getElementById('messagesBadge');
+  if (badge) {
+    if (count > 0) {
+      badge.classList.remove('hidden');
+      badge.textContent = count > 9 ? '9+' : count;
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+}
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', initializeApp);
+
 // 📱 PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {

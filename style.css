@@ -3594,3 +3594,705 @@ input:checked + .toggle-slider:before {
     border: 1px solid #ccc !important;
   }
 }
+
+/* ====================================== */
+/* 🔥 Firebase Features Styles */
+/* ====================================== */
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  z-index: 10000;
+  max-width: 400px;
+  animation: slideInFromRight 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 4px solid var(--color-primary);
+}
+
+.toast-success {
+  border-left-color: var(--color-success);
+}
+
+.toast-error {
+  border-left-color: var(--color-danger);
+}
+
+.toast-info {
+  border-left-color: var(--color-info);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.toast-message {
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.toast-action {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Feedback Form Styles */
+.feedback-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feedback-form {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-control:invalid {
+  border-color: var(--color-danger);
+}
+
+/* Rating Stars */
+.rating-stars {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  color: #ddd;
+  user-select: none;
+}
+
+.star:hover {
+  color: #ffd700;
+}
+
+/* Messages Section */
+.messages-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1rem;
+  height: 500px;
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.messages-sidebar {
+  background: var(--color-background);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+}
+
+.conversations-list {
+  padding: 1rem 0;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.conversation:hover {
+  background: var(--color-background-hover);
+}
+
+.conversation.unread {
+  background: var(--color-primary-light);
+  font-weight: 600;
+}
+
+.conversation-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 0.75rem;
+}
+
+.conversation-content {
+  flex: 1;
+}
+
+.conversation-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.conversation-content p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-time {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+}
+
+.message-thread {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-thread-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background);
+  font-weight: 600;
+}
+
+.messages-list {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.message-input-container {
+  padding: 1rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.message-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+/* Notifications Panel Enhancements */
+.notification {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
+}
+
+.notification:hover {
+  background: var(--color-background-hover);
+}
+
+.notification.unread {
+  background: var(--color-primary-light);
+}
+
+.notification-content h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.notification-content p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.notification-time {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-light);
+}
+
+.empty-state h3 {
+  margin: 1rem 0 0.5rem 0;
+  color: var(--color-text);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Modal Enhancements */
+.modal {
+  max-width: 600px;
+  width: 90vw;
+}
+
+.modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Card Actions for Posts */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  transition: background-color 0.2s ease;
+  color: var(--color-text-secondary);
+}
+
+.btn-icon:hover {
+  background: var(--color-background-hover);
+}
+
+.edit-btn:hover {
+  color: var(--color-info);
+}
+
+.delete-btn:hover {
+  color: var(--color-danger);
+}
+
+/* Card Footer Enhancements */
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.favorite-btn.favorited {
+  color: var(--color-danger);
+  background: var(--color-danger-light);
+}
+
+/* Responsive Design for Firebase Features */
+@media (max-width: 768px) {
+  .messages-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .messages-sidebar {
+    max-height: 200px;
+  }
+  
+  .feedback-form {
+    padding: 1rem;
+  }
+  
+  .toast {
+    right: 10px;
+    top: 10px;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* Dark Mode Support for Firebase Features */
+[data-theme="dark"] .feedback-form,
+[data-theme="dark"] .messages-container,
+[data-theme="dark"] .toast {
+  background: var(--color-background-dark);
+  color: var(--color-text-dark);
+}
+
+[data-theme="dark"] .form-control {
+  background: var(--color-background-dark);
+  color: var(--color-text-dark);
+  border-color: var(--color-border-dark);
+}
+
+[data-theme="dark"] .conversation:hover,
+[data-theme="dark"] .notification:hover {
+  background: var(--color-background-hover-dark);
+}
+
+/* Animation Classes */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading States */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Message Bubble Styles */
+.message-bubble {
+  background: var(--color-background);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--color-primary);
+}
+
+.message-sender {
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.message-content {
+  color: var(--color-text);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.message-time {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.message-header-info h4 {
+  margin: 0 0 0.25rem 0;
+  color: var(--color-text);
+}
+
+.message-header-info p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Enhanced Card Styles for Firebase Posts */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-type {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-type.job {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.card-type.deal {
+  background: var(--color-secondary-light);
+  color: var(--color-secondary);
+}
+
+/* Success/Error States */
+.form-group.success .form-control {
+  border-color: var(--color-success);
+}
+
+.form-group.error .form-control {
+  border-color: var(--color-danger);
+}
+
+.form-feedback {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.form-feedback.success {
+  color: var(--color-success);
+}
+
+.form-feedback.error {
+  color: var(--color-danger);
+}
+
+/* Loading Button States */
+.btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.btn.loading::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.btn.loading .btn-text {
+  opacity: 0;
+}
+
+/* Advanced Firebase Features */
+.realtime-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-success);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* Notification Badge */
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--color-danger);
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.notification-dot.hidden {
+  display: none;
+}
+
+/* Quick Actions Menu */
+.quick-actions {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 1000;
+}
+
+.quick-action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  transform: scale(0);
+  animation: scaleIn 0.3s ease forwards;
+}
+
+.quick-action-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+}
+
+.quick-action-btn.secondary {
+  background: var(--color-secondary);
+}
+
+.quick-action-btn.success {
+  background: var(--color-success);
+}
+
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Data Statistics */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.stat-summary-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.stat-summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-summary-label {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Enhanced Color Variables for Firebase Features */
+:root {
+  --color-success: #22c55e;
+  --color-success-light: #dcfce7;
+  --color-danger: #ef4444;
+  --color-danger-light: #fef2f2;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+  --color-background-hover: #f9fafb;
+  --color-border: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  --color-success: #22c55e;
+  --color-success-light: #064e3b;
+  --color-danger: #ef4444;
+  --color-danger-light: #7f1d1d;
+  --color-warning: #f59e0b;
+  --color-warning-light: #78350f;
+  --color-info: #3b82f6;
+  --color-info-light: #1e3a8a;
+  --color-background-hover-dark: #374151;
+  --color-border-dark: #4b5563;
+}

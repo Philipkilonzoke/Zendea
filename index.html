@@ -1081,18 +1081,40 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      getDocs, 
+      doc, 
+      updateDoc, 
+      deleteDoc, 
+      query, 
+      where, 
+      orderBy, 
+      limit, 
+      serverTimestamp,
+      onSnapshot 
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
     import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
     
-    // Firebase configuration (replace with your actual config)
+    // Firebase configuration
     const firebaseConfig = {
-      apiKey: "your-api-key",
-      authDomain: "your-project.firebaseapp.com",
-      projectId: "your-project-id",
-      storageBucket: "your-project.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "your-app-id"
+      apiKey: "AIzaSyAPfpjx-S8nwKhW-aWyrrpdGEhpTifIAI0",
+      authDomain: "zendea-d1eed.firebaseapp.com",
+      projectId: "zendea-d1eed",
+      storageBucket: "zendea-d1eed.firebasestorage.app",
+      messagingSenderId: "127651343782",
+      appId: "1:127651343782:web:05e189236881cf3b5fb367"
     };
     
     // Initialize Firebase
@@ -1102,7 +1124,32 @@
     const storage = getStorage(app);
     
     // Make Firebase services globally available
-    window.firebase = { app, db, auth, storage };
+    window.firebase = { 
+      app, 
+      db, 
+      auth, 
+      storage,
+      // Firestore functions
+      collection,
+      addDoc,
+      getDocs,
+      doc,
+      updateDoc,
+      deleteDoc,
+      query,
+      where,
+      orderBy,
+      limit,
+      serverTimestamp,
+      onSnapshot,
+      // Auth functions
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup
+    };
   </script>
   
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
