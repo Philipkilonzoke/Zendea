@@ -1652,6 +1652,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initLoadMore();
   initScrollAnimations();
+  initContactToggle();
   
   // Load initial content
   setTimeout(() => {
@@ -2022,3 +2023,80 @@ window.addEventListener('popstate', () => {
   const openPanels = document.querySelectorAll('.notifications-panel:not(.hidden), .chat-widget:not(.hidden)');
   openPanels.forEach(panel => panel.classList.add('hidden'));
 });
+
+// 📞 Contact Toggle Functionality
+function initContactToggle() {
+  const contactToggleBtn = document.getElementById('contactToggleBtn');
+  const contactDetails = document.getElementById('contactDetails');
+  
+  if (contactToggleBtn && contactDetails) {
+    contactToggleBtn.addEventListener('click', () => {
+      const isHidden = contactDetails.classList.contains('hidden');
+      
+      if (isHidden) {
+        contactDetails.classList.remove('hidden');
+        contactDetails.classList.add('show');
+        contactToggleBtn.classList.add('active');
+        
+        // Add cool animation
+        setTimeout(() => {
+          contactDetails.style.transform = 'scale(1.02)';
+          setTimeout(() => {
+            contactDetails.style.transform = 'scale(1)';
+          }, 150);
+        }, 100);
+        
+        // Track analytics
+        if (typeof trackEvent === 'function') {
+          trackEvent('Contact', 'toggle_open', 'footer');
+        }
+      } else {
+        contactDetails.classList.remove('show');
+        contactDetails.classList.add('hidden');
+        contactToggleBtn.classList.remove('active');
+        
+        // Track analytics
+        if (typeof trackEvent === 'function') {
+          trackEvent('Contact', 'toggle_close', 'footer');
+        }
+      }
+    });
+    
+    // Add hover effects
+    contactToggleBtn.addEventListener('mouseenter', () => {
+      contactToggleBtn.style.transform = 'scale(1.05)';
+    });
+    
+    contactToggleBtn.addEventListener('mouseleave', () => {
+      contactToggleBtn.style.transform = 'scale(1)';
+    });
+    
+    // Add click ripple effect
+    contactToggleBtn.addEventListener('click', (e) => {
+      const ripple = document.createElement('span');
+      const rect = contactToggleBtn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      
+      ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+      `;
+      
+      contactToggleBtn.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+  }
+}
