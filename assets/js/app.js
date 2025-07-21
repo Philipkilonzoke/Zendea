@@ -1427,6 +1427,40 @@ class ZendeaApp {
         document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
       }
 
+      // Apply language
+      this.applyLanguage(settings.language);
+      
+      // Apply other settings
+      this.applyCountrySettings(settings.country);
+      this.applyCurrencyFormat(settings.currency);
+      this.applyTimezone(settings.timezone);
+      this.applyImageQuality(settings.imageQuality);
+      
+      // Apply privacy settings visually
+      document.documentElement.classList.toggle('private-profile', !settings.profileVisibility);
+      document.documentElement.classList.toggle('hide-online-status', !settings.showOnlineStatus);
+      document.documentElement.classList.toggle('no-direct-messages', !settings.allowDirectMessages);
+      
+      // Apply accessibility classes
+      document.documentElement.classList.toggle('high-contrast', settings.highContrast);
+      document.documentElement.classList.toggle('screen-reader-mode', settings.screenReader);
+      document.documentElement.classList.toggle('reduced-motion', settings.reducedMotion);
+      
+      // Enable sound effects class
+      if (settings.soundEffects) {
+        document.body.classList.add('sound-enabled');
+      }
+      
+      // Start auto sync if enabled
+      if (settings.autoSync) {
+        this.startAutoSync();
+      }
+      
+      // Enable offline mode if set
+      if (settings.offlineMode) {
+        this.enableOfflineMode();
+      }
+
     } catch (error) {
       console.error('❌ Error loading saved settings:', error);
     }
@@ -1447,100 +1481,229 @@ class ZendeaApp {
         document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
         document.documentElement.style.setProperty('--animation-duration-base', '0ms');
         document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
+        document.documentElement.classList.add('no-animations');
       } else {
         document.documentElement.style.removeProperty('--animation-duration-fast');
         document.documentElement.style.removeProperty('--animation-duration-base');
         document.documentElement.style.removeProperty('--animation-duration-slow');
+        document.documentElement.classList.remove('no-animations');
       }
       this.showToast(`Animations ${enabled ? 'enabled' : 'disabled'}`, 'info');
     });
 
     document.getElementById('soundEffectsToggle')?.addEventListener('change', (e) => {
-      localStorage.setItem('zendea-sound-effects', e.target.checked);
-      this.showToast(`Sound effects ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-sound-effects', enabled);
+      
+      // Test sound effect
+      if (enabled) {
+        this.playSound('toggle');
+        this.showToast('Sound effects enabled! 🔊', 'success');
+      } else {
+        this.showToast('Sound effects disabled 🔇', 'info');
+      }
     });
 
-    // Notification settings
+    // Notification settings (save preferences for future backend integration)
     ['emailNotifications', 'pushNotifications', 'jobAlerts', 'dealAlerts', 'messageNotifications'].forEach(setting => {
       document.getElementById(setting)?.addEventListener('change', (e) => {
         localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
-        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} preference saved`, 'info');
+        if (localStorage.getItem('zendea-sound-effects') === 'true') {
+          this.playSound('toggle');
+        }
       });
     });
 
-    // Privacy settings
-    ['profileVisibility', 'showOnlineStatus', 'allowDirectMessages'].forEach(setting => {
-      document.getElementById(setting)?.addEventListener('change', (e) => {
-        localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
-        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-      });
+    // Privacy settings (functional for frontend behavior)
+    document.getElementById('profileVisibility')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-profile-visibility', e.target.checked);
+      document.documentElement.classList.toggle('private-profile', !e.target.checked);
+      this.showToast(`Profile ${e.target.checked ? 'public' : 'private'}`, 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('toggle');
+      }
     });
 
-    // Performance settings
-    ['offlineMode', 'autoSync'].forEach(setting => {
-      document.getElementById(setting)?.addEventListener('change', (e) => {
-        localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
-        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-      });
+    document.getElementById('showOnlineStatus')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-show-online-status', e.target.checked);
+      document.documentElement.classList.toggle('hide-online-status', !e.target.checked);
+      this.showToast(`Online status ${e.target.checked ? 'visible' : 'hidden'}`, 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('toggle');
+      }
     });
 
-    // Accessibility settings
+    document.getElementById('allowDirectMessages')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-allow-direct-messages', e.target.checked);
+      document.documentElement.classList.toggle('no-direct-messages', !e.target.checked);
+      this.showToast(`Direct messages ${e.target.checked ? 'allowed' : 'blocked'}`, 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('toggle');
+      }
+    });
+
+    // Performance settings (actually implement offline mode)
+    document.getElementById('offlineMode')?.addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-offline-mode', enabled);
+      
+      if (enabled) {
+        this.enableOfflineMode();
+      } else {
+        this.disableOfflineMode();
+      }
+      
+      this.showToast(`Offline mode ${enabled ? 'enabled' : 'disabled'}`, 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('toggle');
+      }
+    });
+
+    document.getElementById('autoSync')?.addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-auto-sync', enabled);
+      
+      if (enabled) {
+        this.startAutoSync();
+      } else {
+        this.stopAutoSync();
+      }
+      
+      this.showToast(`Auto sync ${enabled ? 'enabled' : 'disabled'}`, 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('toggle');
+      }
+    });
+
+    // Accessibility settings (fully functional)
     document.getElementById('reducedMotion')?.addEventListener('change', (e) => {
-      localStorage.setItem('zendea-reduced-motion', e.target.checked);
-      if (e.target.checked) {
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-reduced-motion', enabled);
+      
+      if (enabled) {
         document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
         document.documentElement.style.setProperty('--animation-duration-base', '0ms');
         document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
+        document.documentElement.classList.add('reduced-motion');
       } else {
         document.documentElement.style.removeProperty('--animation-duration-fast');
         document.documentElement.style.removeProperty('--animation-duration-base');
         document.documentElement.style.removeProperty('--animation-duration-slow');
+        document.documentElement.classList.remove('reduced-motion');
       }
-      this.showToast(`Motion ${e.target.checked ? 'reduced' : 'restored'}`, 'info');
+      
+      this.showToast(`Motion ${enabled ? 'reduced' : 'restored'}`, 'info');
     });
 
     document.getElementById('highContrast')?.addEventListener('change', (e) => {
-      localStorage.setItem('zendea-high-contrast', e.target.checked);
-      document.documentElement.classList.toggle('high-contrast', e.target.checked);
-      this.showToast(`High contrast ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-high-contrast', enabled);
+      document.documentElement.classList.toggle('high-contrast', enabled);
+      
+      if (enabled) {
+        document.documentElement.style.setProperty('--color-contrast-ratio', '7:1');
+      } else {
+        document.documentElement.style.removeProperty('--color-contrast-ratio');
+      }
+      
+      this.showToast(`High contrast ${enabled ? 'enabled' : 'disabled'}`, 'info');
     });
 
     document.getElementById('screenReader')?.addEventListener('change', (e) => {
-      localStorage.setItem('zendea-screen-reader', e.target.checked);
-      this.showToast(`Screen reader support ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-screen-reader', enabled);
+      document.documentElement.classList.toggle('screen-reader-mode', enabled);
+      
+      // Add ARIA labels and descriptions when enabled
+      if (enabled) {
+        this.enhanceAccessibility();
+      } else {
+        this.reduceAccessibility();
+      }
+      
+      this.showToast(`Screen reader support ${enabled ? 'enabled' : 'disabled'}`, 'info');
     });
 
-    // Font size slider
+    // Font size slider (fully functional)
     document.getElementById('fontSizeSlider')?.addEventListener('input', (e) => {
       const fontSize = e.target.value;
       document.documentElement.style.setProperty('--font-size-base', `${fontSize}px`);
+      document.documentElement.style.setProperty('--font-size-sm', `${fontSize * 0.875}px`);
+      document.documentElement.style.setProperty('--font-size-lg', `${fontSize * 1.125}px`);
+      document.documentElement.style.setProperty('--font-size-xl', `${fontSize * 1.25}px`);
       localStorage.setItem('zendea-font-size', fontSize);
+      
+      // Show current size
+      this.showToast(`Font size: ${fontSize}px`, 'info');
     });
 
-    // Language and region selects
-    ['languageSelect', 'countrySelect', 'currencySelect', 'timezoneSelect', 'imageQuality'].forEach(selectId => {
-      document.getElementById(selectId)?.addEventListener('change', (e) => {
-        const setting = selectId.replace('Select', '').replace(/([A-Z])/g, '-$1').toLowerCase();
-        localStorage.setItem(`zendea-${setting}`, e.target.value);
-        this.showToast(`${selectId.replace('Select', '').replace(/([A-Z])/g, ' $1').toLowerCase()} updated`, 'info');
-      });
+    // Language and region selects (implement basic language switching)
+    document.getElementById('languageSelect')?.addEventListener('change', (e) => {
+      const language = e.target.value;
+      localStorage.setItem('zendea-language', language);
+      this.applyLanguage(language);
+      this.showToast(`Language changed to ${this.getLanguageName(language)}`, 'success');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
+    });
+
+    document.getElementById('countrySelect')?.addEventListener('change', (e) => {
+      const country = e.target.value;
+      localStorage.setItem('zendea-country', country);
+      this.applyCountrySettings(country);
+      this.showToast(`Country updated to ${this.getCountryName(country)}`, 'info');
+    });
+
+    document.getElementById('currencySelect')?.addEventListener('change', (e) => {
+      const currency = e.target.value;
+      localStorage.setItem('zendea-currency', currency);
+      this.applyCurrencyFormat(currency);
+      this.showToast(`Currency set to ${currency}`, 'info');
+    });
+
+    document.getElementById('timezoneSelect')?.addEventListener('change', (e) => {
+      const timezone = e.target.value;
+      localStorage.setItem('zendea-timezone', timezone);
+      this.applyTimezone(timezone);
+      this.showToast(`Timezone updated`, 'info');
+    });
+
+    document.getElementById('imageQuality')?.addEventListener('change', (e) => {
+      const quality = e.target.value;
+      localStorage.setItem('zendea-image-quality', quality);
+      this.applyImageQuality(quality);
+      this.showToast(`Image quality set to ${quality}`, 'info');
     });
 
     // Account management buttons
     document.getElementById('updateProfileBtn')?.addEventListener('click', () => {
       this.showToast('Profile update feature coming soon!', 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     document.getElementById('exportDataBtn')?.addEventListener('click', () => {
       this.exportUserData();
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
     });
 
     document.getElementById('clearCacheBtn')?.addEventListener('click', () => {
       this.clearCache();
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
     });
 
     document.getElementById('backupDataBtn')?.addEventListener('click', () => {
       this.backupUserData();
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
     });
 
     document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
@@ -1550,37 +1713,385 @@ class ZendeaApp {
     // Password and security buttons
     document.getElementById('changePasswordBtn')?.addEventListener('click', () => {
       this.showToast('Password change feature coming soon!', 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     document.getElementById('twoFactorBtn')?.addEventListener('click', () => {
       this.showToast('Two-factor authentication coming soon!', 'info');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     // Support buttons
     document.getElementById('helpCenterBtn')?.addEventListener('click', () => {
       window.open('https://help.zendea.com', '_blank');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     document.getElementById('contactSupportBtn')?.addEventListener('click', () => {
       window.open('mailto:philipkilonzoke@gmail.com?subject=Zendea Support Request', '_blank');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     document.getElementById('termsOfServiceBtn')?.addEventListener('click', () => {
       window.open('https://zendea.com/terms', '_blank');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     document.getElementById('privacyPolicyBtn')?.addEventListener('click', () => {
       window.open('https://zendea.com/privacy', '_blank');
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('click');
+      }
     });
 
     // Settings actions
     document.getElementById('saveSettingsBtn')?.addEventListener('click', () => {
       this.saveAllSettings();
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
     });
 
     document.getElementById('resetSettingsBtn')?.addEventListener('click', () => {
       this.resetAllSettings();
     });
+  }
+
+  // ============================================ //
+  // 🔊 SOUND EFFECTS SYSTEM
+  // ============================================ //
+
+  playSound(type) {
+    if (localStorage.getItem('zendea-sound-effects') !== 'true') return;
+    
+    try {
+      // Create audio context for sound generation
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Different sounds for different actions
+      const sounds = {
+        toggle: { frequency: 800, duration: 0.1 },
+        click: { frequency: 600, duration: 0.05 },
+        success: { frequency: 523, duration: 0.2 }, // C note
+        error: { frequency: 300, duration: 0.3 },
+        notification: { frequency: 1000, duration: 0.15 }
+      };
+      
+      const sound = sounds[type] || sounds.click;
+      
+      oscillator.frequency.setValueAtTime(sound.frequency, audioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + sound.duration);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + sound.duration);
+      
+    } catch (error) {
+      console.log('Sound not supported in this browser');
+    }
+  }
+
+  // ============================================ //
+  // 🌍 LANGUAGE SYSTEM
+  // ============================================ //
+
+  applyLanguage(languageCode) {
+    const translations = {
+      en: {
+        'welcome': 'Welcome to Zendea',
+        'jobs': 'Jobs',
+        'deals': 'Deals',
+        'favorites': 'Favorites',
+        'messages': 'Messages',
+        'feedback': 'Feedback',
+        'settings': 'Settings',
+        'home': 'Home'
+      },
+      sw: {
+        'welcome': 'Karibu Zendea',
+        'jobs': 'Kazi',
+        'deals': 'Punguzo',
+        'favorites': 'Pendekezo',
+        'messages': 'Ujumbe',
+        'feedback': 'Maoni',
+        'settings': 'Mipangilio',
+        'home': 'Nyumbani'
+      },
+      fr: {
+        'welcome': 'Bienvenue à Zendea',
+        'jobs': 'Emplois',
+        'deals': 'Offres',
+        'favorites': 'Favoris',
+        'messages': 'Messages',
+        'feedback': 'Commentaires',
+        'settings': 'Paramètres',
+        'home': 'Accueil'
+      },
+      es: {
+        'welcome': 'Bienvenido a Zendea',
+        'jobs': 'Trabajos',
+        'deals': 'Ofertas',
+        'favorites': 'Favoritos',
+        'messages': 'Mensajes',
+        'feedback': 'Comentarios',
+        'settings': 'Configuración',
+        'home': 'Inicio'
+      },
+      ar: {
+        'welcome': 'مرحباً بك في زينديا',
+        'jobs': 'وظائف',
+        'deals': 'عروض',
+        'favorites': 'المفضلة',
+        'messages': 'الرسائل',
+        'feedback': 'التعليقات',
+        'settings': 'الإعدادات',
+        'home': 'الرئيسية'
+      }
+    };
+
+    const translation = translations[languageCode] || translations.en;
+    
+    // Update navigation items
+    document.querySelectorAll('[data-translate]').forEach(element => {
+      const key = element.getAttribute('data-translate');
+      if (translation[key]) {
+        element.textContent = translation[key];
+      }
+    });
+
+    // Update document language
+    document.documentElement.lang = languageCode;
+    
+    // Apply RTL for Arabic
+    if (languageCode === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.body.classList.add('rtl');
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.body.classList.remove('rtl');
+    }
+  }
+
+  getLanguageName(code) {
+    const names = {
+      en: 'English',
+      sw: 'Kiswahili',
+      fr: 'Français',
+      es: 'Español',
+      ar: 'العربية'
+    };
+    return names[code] || 'Unknown';
+  }
+
+  getCountryName(code) {
+    const names = {
+      KE: 'Kenya',
+      TZ: 'Tanzania',
+      UG: 'Uganda',
+      RW: 'Rwanda',
+      ET: 'Ethiopia'
+    };
+    return names[code] || 'Unknown';
+  }
+
+  // ============================================ //
+  // 📱 OFFLINE MODE & AUTO SYNC
+  // ============================================ //
+
+  enableOfflineMode() {
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => {
+            console.log('✅ Service Worker registered for offline mode');
+            document.body.classList.add('offline-mode');
+          })
+          .catch(error => {
+            console.error('❌ Service Worker registration failed:', error);
+          });
+      }
+    } catch (error) {
+      console.error('❌ Error enabling offline mode:', error);
+    }
+  }
+
+  disableOfflineMode() {
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(registration => {
+            registration.unregister();
+          });
+        });
+      }
+      document.body.classList.remove('offline-mode');
+      console.log('✅ Offline mode disabled');
+    } catch (error) {
+      console.error('❌ Error disabling offline mode:', error);
+    }
+  }
+
+  startAutoSync() {
+    // Simple auto-sync simulation
+    this.autoSyncInterval = setInterval(() => {
+      if (navigator.onLine && window.firebaseService) {
+        console.log('🔄 Auto-syncing data...');
+        // In a real app, this would sync local data with Firebase
+      }
+    }, 30000); // Every 30 seconds
+  }
+
+  stopAutoSync() {
+    if (this.autoSyncInterval) {
+      clearInterval(this.autoSyncInterval);
+      this.autoSyncInterval = null;
+    }
+  }
+
+  // ============================================ //
+  // ♿ ACCESSIBILITY ENHANCEMENTS
+  // ============================================ //
+
+  enhanceAccessibility() {
+    // Add ARIA labels and improve accessibility
+    document.querySelectorAll('button').forEach(button => {
+      if (!button.getAttribute('aria-label') && button.textContent) {
+        button.setAttribute('aria-label', button.textContent.trim());
+      }
+    });
+
+    // Add focus indicators
+    document.body.classList.add('enhanced-focus');
+    
+    // Add skip links
+    this.addSkipLinks();
+  }
+
+  reduceAccessibility() {
+    document.body.classList.remove('enhanced-focus');
+    document.querySelectorAll('.skip-link').forEach(link => link.remove());
+  }
+
+  addSkipLinks() {
+    if (document.querySelector('.skip-link')) return;
+    
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main';
+    skipLink.className = 'skip-link';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.style.cssText = `
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: var(--color-primary);
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      border-radius: 4px;
+      z-index: 10000;
+    `;
+    
+    skipLink.addEventListener('focus', () => {
+      skipLink.style.top = '6px';
+    });
+    
+    skipLink.addEventListener('blur', () => {
+      skipLink.style.top = '-40px';
+    });
+    
+    document.body.insertBefore(skipLink, document.body.firstChild);
+  }
+
+  // ============================================ //
+  // 🎨 IMAGE QUALITY & PERFORMANCE
+  // ============================================ //
+
+  applyImageQuality(quality) {
+    const qualitySettings = {
+      high: { compression: 0.9, maxWidth: 1920 },
+      medium: { compression: 0.7, maxWidth: 1280 },
+      low: { compression: 0.5, maxWidth: 640 }
+    };
+    
+    const setting = qualitySettings[quality];
+    document.documentElement.style.setProperty('--image-compression', setting.compression);
+    document.documentElement.style.setProperty('--image-max-width', `${setting.maxWidth}px`);
+    
+    // Apply to existing images
+    document.querySelectorAll('img').forEach(img => {
+      img.style.maxWidth = `${setting.maxWidth}px`;
+      img.style.height = 'auto';
+    });
+  }
+
+  applyCurrencyFormat(currency) {
+    // Store for future price formatting
+    window.ZENDEA_CURRENCY = currency;
+    
+    // Update any existing price displays
+    document.querySelectorAll('[data-price]').forEach(element => {
+      const price = element.getAttribute('data-price');
+      element.textContent = this.formatPrice(price, currency);
+    });
+  }
+
+  applyCountrySettings(country) {
+    // Apply country-specific settings
+    document.documentElement.setAttribute('data-country', country);
+  }
+
+  applyTimezone(timezone) {
+    // Store timezone for date formatting
+    window.ZENDEA_TIMEZONE = timezone;
+    
+    // Update any existing timestamps
+    document.querySelectorAll('[data-timestamp]').forEach(element => {
+      const timestamp = element.getAttribute('data-timestamp');
+      element.textContent = this.formatDate(new Date(timestamp), timezone);
+    });
+  }
+
+  formatPrice(price, currency = 'KES') {
+    const symbols = {
+      KES: 'KSh ',
+      USD: '$',
+      EUR: '€',
+      GBP: '£'
+    };
+    
+    return `${symbols[currency] || ''}${parseFloat(price).toLocaleString()}`;
+  }
+
+  formatDate(date, timezone = 'Africa/Nairobi') {
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    } catch (error) {
+      return date.toLocaleDateString();
+    }
   }
 
   updateStorageInfo() {
