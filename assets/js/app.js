@@ -203,6 +203,9 @@ class ZendeaApp {
             await this.loadMessages();
           }
           break;
+        case 'settings':
+          await this.loadSettings();
+          break;
       }
     } catch (error) {
       console.error(`❌ Error loading ${sectionName} data:`, error);
@@ -217,7 +220,8 @@ class ZendeaApp {
       deals: 'Deals',
       favorites: 'My Favorites',
       messages: 'Messages',
-      feedback: 'Feedback'
+      feedback: 'Feedback',
+      settings: 'Settings'
     };
     
     const title = titles[sectionName] || 'Zendea';
@@ -1255,6 +1259,531 @@ class ZendeaApp {
   toggleUserDropdown() {
     const dropdown = document.getElementById('userDropdown');
     dropdown?.classList.toggle('show');
+  }
+
+  // ============================================ //
+  // ⚙️ SETTINGS FUNCTIONALITY
+  // ============================================ //
+
+  async loadSettings() {
+    try {
+      // Initialize theme grid
+      this.initializeThemeGrid();
+      
+      // Load saved settings
+      this.loadSavedSettings();
+      
+      // Initialize settings event listeners
+      this.initializeSettingsEventListeners();
+      
+      // Update storage info
+      this.updateStorageInfo();
+      
+      console.log('✅ Settings loaded successfully');
+    } catch (error) {
+      console.error('❌ Error loading settings:', error);
+      this.showToast('Failed to load settings', 'error');
+    }
+  }
+
+  initializeThemeGrid() {
+    const themeGrid = document.getElementById('themeGrid');
+    if (!themeGrid) return;
+
+    const themes = [
+      { id: 'light', name: 'Light', primary: '#6366f1', secondary: '#10b981', background: '#ffffff' },
+      { id: 'dark', name: 'Dark', primary: '#6366f1', secondary: '#10b981', background: '#111827' },
+      { id: 'ocean-breeze', name: 'Ocean Breeze', primary: '#0EA5E9', secondary: '#06B6D4', background: '#F0F9FF' },
+      { id: 'sunset-glow', name: 'Sunset Glow', primary: '#F97316', secondary: '#EF4444', background: '#FFF7ED' },
+      { id: 'forest-green', name: 'Forest Green', primary: '#059669', secondary: '#10B981', background: '#F0FDF4' },
+      { id: 'royal-purple', name: 'Royal Purple', primary: '#7C3AED', secondary: '#A855F7', background: '#FAF5FF' },
+      { id: 'cherry-blossom', name: 'Cherry Blossom', primary: '#EC4899', secondary: '#F472B6', background: '#FDF2F8' },
+      { id: 'midnight-blue', name: 'Midnight Blue', primary: '#1E40AF', secondary: '#3B82F6', background: '#F8FAFC' },
+      { id: 'golden-hour', name: 'Golden Hour', primary: '#D97706', secondary: '#F59E0B', background: '#FFFBEB' },
+      { id: 'lavender-dreams', name: 'Lavender Dreams', primary: '#8B5CF6', secondary: '#A78BFA', background: '#F5F3FF' },
+      { id: 'mint-fresh', name: 'Mint Fresh', primary: '#14B8A6', secondary: '#06B6D4', background: '#F0FDFA' },
+      { id: 'rose-gold', name: 'Rose Gold', primary: '#BE185D', secondary: '#DC2626', background: '#FFF1F2' },
+      { id: 'arctic-ice', name: 'Arctic Ice', primary: '#0F766E', secondary: '#0891B2', background: '#ECFEFF' },
+      { id: 'warm-amber', name: 'Warm Amber', primary: '#92400E', secondary: '#B45309', background: '#FFFBEB' },
+      { id: 'cosmic-purple', name: 'Cosmic Purple', primary: '#581C87', secondary: '#7C2D12', background: '#1A1A2E' },
+      { id: 'emerald-garden', name: 'Emerald Garden', primary: '#047857', secondary: '#059669', background: '#ECFDF5' },
+      { id: 'crimson-sunset', name: 'Crimson Sunset', primary: '#B91C1C', secondary: '#DC2626', background: '#FEF2F2' }
+    ];
+
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+    themeGrid.innerHTML = themes.map(theme => `
+      <div class="theme-option ${theme.id === currentTheme ? 'active' : ''}" 
+           data-theme="${theme.id}" 
+           title="${theme.name}">
+        <div class="theme-preview" style="background: ${theme.background};">
+          <div class="theme-header" style="background: ${theme.primary};"></div>
+          <div class="theme-content">
+            <div class="theme-line" style="background: ${theme.primary};"></div>
+            <div class="theme-line" style="background: ${theme.secondary};"></div>
+            <div class="theme-line" style="background: ${theme.primary};"></div>
+          </div>
+          <div class="theme-name">${theme.name}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Add theme selection event listeners
+    themeGrid.querySelectorAll('.theme-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        const themeId = option.getAttribute('data-theme');
+        this.applyTheme(themeId);
+        
+        // Update active state
+        themeGrid.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+  }
+
+  applyTheme(themeId) {
+    try {
+      // Update HTML data-theme attribute
+      document.documentElement.setAttribute('data-theme', themeId);
+      
+      // Save to localStorage
+      localStorage.setItem('zendea-theme', themeId);
+      
+      // Update theme toggle icon based on theme
+      this.updateThemeIcon(themeId);
+      
+      // Show success toast
+      this.showToast(`Applied ${themeId.replace('-', ' ')} theme! 🎨`, 'success');
+      
+      // Track analytics
+      if (window.firebaseService && window.firebaseService.isAuthenticated()) {
+        window.firebaseService.trackAnalytics('theme_changed', { 
+          theme: themeId,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+      console.log(`✅ Theme applied: ${themeId}`);
+    } catch (error) {
+      console.error('❌ Error applying theme:', error);
+      this.showToast('Failed to apply theme', 'error');
+    }
+  }
+
+  loadSavedSettings() {
+    try {
+      // Load theme
+      const savedTheme = localStorage.getItem('zendea-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      // Load other preferences
+      const settings = {
+        darkMode: localStorage.getItem('zendea-dark-mode') === 'true',
+        animations: localStorage.getItem('zendea-animations') !== 'false',
+        soundEffects: localStorage.getItem('zendea-sound-effects') === 'true',
+        emailNotifications: localStorage.getItem('zendea-email-notifications') !== 'false',
+        pushNotifications: localStorage.getItem('zendea-push-notifications') !== 'false',
+        jobAlerts: localStorage.getItem('zendea-job-alerts') !== 'false',
+        dealAlerts: localStorage.getItem('zendea-deal-alerts') !== 'false',
+        messageNotifications: localStorage.getItem('zendea-message-notifications') !== 'false',
+        profileVisibility: localStorage.getItem('zendea-profile-visibility') !== 'false',
+        showOnlineStatus: localStorage.getItem('zendea-show-online-status') !== 'false',
+        allowDirectMessages: localStorage.getItem('zendea-allow-direct-messages') !== 'false',
+        offlineMode: localStorage.getItem('zendea-offline-mode') === 'true',
+        autoSync: localStorage.getItem('zendea-auto-sync') !== 'false',
+        reducedMotion: localStorage.getItem('zendea-reduced-motion') === 'true',
+        highContrast: localStorage.getItem('zendea-high-contrast') === 'true',
+        screenReader: localStorage.getItem('zendea-screen-reader') === 'true',
+        language: localStorage.getItem('zendea-language') || 'en',
+        country: localStorage.getItem('zendea-country') || 'KE',
+        currency: localStorage.getItem('zendea-currency') || 'KES',
+        timezone: localStorage.getItem('zendea-timezone') || 'Africa/Nairobi',
+        imageQuality: localStorage.getItem('zendea-image-quality') || 'medium',
+        fontSize: localStorage.getItem('zendea-font-size') || '16'
+      };
+
+      // Apply settings to UI
+      Object.keys(settings).forEach(key => {
+        const element = document.getElementById(key + (key.includes('Toggle') || key.includes('Input') ? '' : 
+                       key === 'fontSize' ? 'Slider' : 'Select'));
+        if (element) {
+          if (element.type === 'checkbox') {
+            element.checked = settings[key];
+          } else if (element.type === 'range') {
+            element.value = settings[key];
+          } else {
+            element.value = settings[key];
+          }
+        }
+      });
+
+      // Apply font size
+      document.documentElement.style.setProperty('--font-size-base', `${settings.fontSize}px`);
+
+      // Apply accessibility settings
+      if (settings.reducedMotion) {
+        document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-base', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
+      }
+
+    } catch (error) {
+      console.error('❌ Error loading saved settings:', error);
+    }
+  }
+
+  initializeSettingsEventListeners() {
+    // Theme and appearance toggles
+    document.getElementById('darkModeToggle')?.addEventListener('change', (e) => {
+      const isDark = e.target.checked;
+      this.applyTheme(isDark ? 'dark' : 'light');
+      localStorage.setItem('zendea-dark-mode', isDark);
+    });
+
+    document.getElementById('animationsToggle')?.addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      localStorage.setItem('zendea-animations', enabled);
+      if (!enabled) {
+        document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-base', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
+      } else {
+        document.documentElement.style.removeProperty('--animation-duration-fast');
+        document.documentElement.style.removeProperty('--animation-duration-base');
+        document.documentElement.style.removeProperty('--animation-duration-slow');
+      }
+      this.showToast(`Animations ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    });
+
+    document.getElementById('soundEffectsToggle')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-sound-effects', e.target.checked);
+      this.showToast(`Sound effects ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+    });
+
+    // Notification settings
+    ['emailNotifications', 'pushNotifications', 'jobAlerts', 'dealAlerts', 'messageNotifications'].forEach(setting => {
+      document.getElementById(setting)?.addEventListener('change', (e) => {
+        localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
+        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      });
+    });
+
+    // Privacy settings
+    ['profileVisibility', 'showOnlineStatus', 'allowDirectMessages'].forEach(setting => {
+      document.getElementById(setting)?.addEventListener('change', (e) => {
+        localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
+        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      });
+    });
+
+    // Performance settings
+    ['offlineMode', 'autoSync'].forEach(setting => {
+      document.getElementById(setting)?.addEventListener('change', (e) => {
+        localStorage.setItem(`zendea-${setting.replace(/([A-Z])/g, '-$1').toLowerCase()}`, e.target.checked);
+        this.showToast(`${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+      });
+    });
+
+    // Accessibility settings
+    document.getElementById('reducedMotion')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-reduced-motion', e.target.checked);
+      if (e.target.checked) {
+        document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-base', '0ms');
+        document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
+      } else {
+        document.documentElement.style.removeProperty('--animation-duration-fast');
+        document.documentElement.style.removeProperty('--animation-duration-base');
+        document.documentElement.style.removeProperty('--animation-duration-slow');
+      }
+      this.showToast(`Motion ${e.target.checked ? 'reduced' : 'restored'}`, 'info');
+    });
+
+    document.getElementById('highContrast')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-high-contrast', e.target.checked);
+      document.documentElement.classList.toggle('high-contrast', e.target.checked);
+      this.showToast(`High contrast ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+    });
+
+    document.getElementById('screenReader')?.addEventListener('change', (e) => {
+      localStorage.setItem('zendea-screen-reader', e.target.checked);
+      this.showToast(`Screen reader support ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+    });
+
+    // Font size slider
+    document.getElementById('fontSizeSlider')?.addEventListener('input', (e) => {
+      const fontSize = e.target.value;
+      document.documentElement.style.setProperty('--font-size-base', `${fontSize}px`);
+      localStorage.setItem('zendea-font-size', fontSize);
+    });
+
+    // Language and region selects
+    ['languageSelect', 'countrySelect', 'currencySelect', 'timezoneSelect', 'imageQuality'].forEach(selectId => {
+      document.getElementById(selectId)?.addEventListener('change', (e) => {
+        const setting = selectId.replace('Select', '').replace(/([A-Z])/g, '-$1').toLowerCase();
+        localStorage.setItem(`zendea-${setting}`, e.target.value);
+        this.showToast(`${selectId.replace('Select', '').replace(/([A-Z])/g, ' $1').toLowerCase()} updated`, 'info');
+      });
+    });
+
+    // Account management buttons
+    document.getElementById('updateProfileBtn')?.addEventListener('click', () => {
+      this.showToast('Profile update feature coming soon!', 'info');
+    });
+
+    document.getElementById('exportDataBtn')?.addEventListener('click', () => {
+      this.exportUserData();
+    });
+
+    document.getElementById('clearCacheBtn')?.addEventListener('click', () => {
+      this.clearCache();
+    });
+
+    document.getElementById('backupDataBtn')?.addEventListener('click', () => {
+      this.backupUserData();
+    });
+
+    document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
+      this.confirmDeleteAccount();
+    });
+
+    // Password and security buttons
+    document.getElementById('changePasswordBtn')?.addEventListener('click', () => {
+      this.showToast('Password change feature coming soon!', 'info');
+    });
+
+    document.getElementById('twoFactorBtn')?.addEventListener('click', () => {
+      this.showToast('Two-factor authentication coming soon!', 'info');
+    });
+
+    // Support buttons
+    document.getElementById('helpCenterBtn')?.addEventListener('click', () => {
+      window.open('https://help.zendea.com', '_blank');
+    });
+
+    document.getElementById('contactSupportBtn')?.addEventListener('click', () => {
+      window.open('mailto:philipkilonzoke@gmail.com?subject=Zendea Support Request', '_blank');
+    });
+
+    document.getElementById('termsOfServiceBtn')?.addEventListener('click', () => {
+      window.open('https://zendea.com/terms', '_blank');
+    });
+
+    document.getElementById('privacyPolicyBtn')?.addEventListener('click', () => {
+      window.open('https://zendea.com/privacy', '_blank');
+    });
+
+    // Settings actions
+    document.getElementById('saveSettingsBtn')?.addEventListener('click', () => {
+      this.saveAllSettings();
+    });
+
+    document.getElementById('resetSettingsBtn')?.addEventListener('click', () => {
+      this.resetAllSettings();
+    });
+  }
+
+  updateStorageInfo() {
+    try {
+      // Calculate approximate storage usage
+      let totalSize = 0;
+      for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+          totalSize += localStorage[key].length;
+        }
+      }
+
+      const cacheSize = Math.round(totalSize * 0.3 / 1024 * 100) / 100; // Approximation
+      const localDataSize = Math.round(totalSize / 1024 * 100) / 100;
+      const totalStorage = cacheSize + localDataSize;
+
+      document.getElementById('cacheSize').textContent = `${cacheSize} KB`;
+      document.getElementById('localDataSize').textContent = `${localDataSize} KB`;
+      document.getElementById('totalStorage').textContent = `${totalStorage} KB`;
+    } catch (error) {
+      console.error('❌ Error updating storage info:', error);
+    }
+  }
+
+  exportUserData() {
+    try {
+      const userData = {
+        theme: localStorage.getItem('zendea-theme'),
+        preferences: {},
+        posts: [], // Would be fetched from Firebase
+        messages: [], // Would be fetched from Firebase
+        favorites: [], // Would be fetched from Firebase
+        exportDate: new Date().toISOString()
+      };
+
+      // Collect all settings
+      for (let key in localStorage) {
+        if (key.startsWith('zendea-')) {
+          userData.preferences[key] = localStorage.getItem(key);
+        }
+      }
+
+      const dataBlob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `zendea-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      this.showToast('Data exported successfully! 📥', 'success');
+    } catch (error) {
+      console.error('❌ Error exporting data:', error);
+      this.showToast('Failed to export data', 'error');
+    }
+  }
+
+  clearCache() {
+    try {
+      // Clear specific cache items
+      const cacheKeys = ['zendea-cache', 'zendea-temp-data'];
+      cacheKeys.forEach(key => localStorage.removeItem(key));
+      
+      // Clear service worker cache if available
+      if ('serviceWorker' in navigator && 'caches' in window) {
+        caches.keys().then(cacheNames => {
+          cacheNames.forEach(cacheName => {
+            if (cacheName.includes('zendea')) {
+              caches.delete(cacheName);
+            }
+          });
+        });
+      }
+
+      this.updateStorageInfo();
+      this.showToast('Cache cleared successfully! 🧹', 'success');
+    } catch (error) {
+      console.error('❌ Error clearing cache:', error);
+      this.showToast('Failed to clear cache', 'error');
+    }
+  }
+
+  backupUserData() {
+    try {
+      const backupData = {
+        settings: {},
+        timestamp: new Date().toISOString(),
+        version: '2.1.0'
+      };
+
+      // Collect all settings
+      for (let key in localStorage) {
+        if (key.startsWith('zendea-')) {
+          backupData.settings[key] = localStorage.getItem(key);
+        }
+      }
+
+      localStorage.setItem('zendea-backup', JSON.stringify(backupData));
+      this.showToast('Settings backed up successfully! ☁️', 'success');
+    } catch (error) {
+      console.error('❌ Error backing up data:', error);
+      this.showToast('Failed to backup data', 'error');
+    }
+  }
+
+  confirmDeleteAccount() {
+    const isConfirmed = confirm(
+      'Are you sure you want to delete your account? This action cannot be undone.\n\n' +
+      'All your posts, messages, and data will be permanently deleted.'
+    );
+
+    if (isConfirmed) {
+      const finalConfirm = prompt(
+        'Type "DELETE MY ACCOUNT" to confirm account deletion:'
+      );
+
+      if (finalConfirm === 'DELETE MY ACCOUNT') {
+        this.deleteAccount();
+      } else {
+        this.showToast('Account deletion cancelled', 'info');
+      }
+    }
+  }
+
+  async deleteAccount() {
+    try {
+      if (window.firebaseService && window.firebaseService.isAuthenticated()) {
+        // In a real implementation, this would call Firebase Auth deleteUser()
+        this.showToast('Account deletion feature will be implemented soon', 'warning');
+      } else {
+        this.showToast('Please log in to delete your account', 'warning');
+      }
+    } catch (error) {
+      console.error('❌ Error deleting account:', error);
+      this.showToast('Failed to delete account', 'error');
+    }
+  }
+
+  saveAllSettings() {
+    try {
+      // All settings are already saved as they're changed
+      // This button provides user feedback
+      this.showToast('All settings saved successfully! 💾', 'success');
+      
+      // Track analytics
+      if (window.firebaseService && window.firebaseService.isAuthenticated()) {
+        window.firebaseService.trackAnalytics('settings_saved', {
+          timestamp: new Date().toISOString()
+        });
+      }
+    } catch (error) {
+      console.error('❌ Error saving settings:', error);
+      this.showToast('Failed to save settings', 'error');
+    }
+  }
+
+  resetAllSettings() {
+    const isConfirmed = confirm(
+      'Are you sure you want to reset all settings to default?\n\n' +
+      'This will clear all your preferences and cannot be undone.'
+    );
+
+    if (isConfirmed) {
+      try {
+        // Clear all Zendea settings from localStorage
+        const keysToRemove = [];
+        for (let key in localStorage) {
+          if (key.startsWith('zendea-')) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+
+        // Reset to default theme
+        document.documentElement.setAttribute('data-theme', 'light');
+
+        // Reset CSS properties
+        document.documentElement.style.removeProperty('--font-size-base');
+        document.documentElement.style.removeProperty('--animation-duration-fast');
+        document.documentElement.style.removeProperty('--animation-duration-base');
+        document.documentElement.style.removeProperty('--animation-duration-slow');
+        document.documentElement.classList.remove('high-contrast');
+
+        // Reload settings
+        this.loadSavedSettings();
+        this.initializeThemeGrid();
+
+        this.showToast('Settings reset to defaults successfully! 🔄', 'success');
+        
+        // Track analytics
+        if (window.firebaseService && window.firebaseService.isAuthenticated()) {
+          window.firebaseService.trackAnalytics('settings_reset', {
+            timestamp: new Date().toISOString()
+          });
+        }
+      } catch (error) {
+        console.error('❌ Error resetting settings:', error);
+        this.showToast('Failed to reset settings', 'error');
+      }
+    }
   }
 }
 
