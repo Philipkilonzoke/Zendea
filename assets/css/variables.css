@@ -1,0 +1,189 @@
+/* ====================================== */
+/* 🎨 Zendea Design System Variables */
+/* ====================================== */
+
+:root {
+  /* 🎨 Primary Colors */
+  --color-primary: #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-primary-light: #a5b4fc;
+  --color-primary-lighter: #e0e7ff;
+  
+  /* 🌈 Secondary Colors */
+  --color-secondary: #10b981;
+  --color-secondary-dark: #059669;
+  --color-secondary-light: #6ee7b7;
+  --color-secondary-lighter: #d1fae5;
+  
+  /* 🎯 Accent Colors */
+  --color-accent: #f59e0b;
+  --color-accent-dark: #d97706;
+  --color-accent-light: #fbbf24;
+  
+  /* 🚨 Status Colors */
+  --color-success: #22c55e;
+  --color-success-light: #dcfce7;
+  --color-danger: #ef4444;
+  --color-danger-light: #fef2f2;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+  
+  /* 🌈 Gradient Colors */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  --gradient-sunset: linear-gradient(135deg, #ff6b6b, #feca57);
+  --gradient-ocean: linear-gradient(135deg, #667eea, #764ba2);
+  --gradient-purple: linear-gradient(135deg, #667eea, #f093fb);
+  
+  /* 📝 Text Colors */
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-light: #9ca3af;
+  --color-text-inverse: #ffffff;
+  
+  /* 🌍 Background Colors */
+  --color-background: #ffffff;
+  --color-background-secondary: #f9fafb;
+  --color-background-tertiary: #f3f4f6;
+  --color-background-dark: #111827;
+  --color-background-hover: #f9fafb;
+  
+  /* 🖱️ Interactive Colors */
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-border-dark: #d1d5db;
+  --color-focus: var(--color-primary);
+  --color-hover: var(--color-primary-light);
+  
+  /* 📏 Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+  --spacing-4xl: 6rem;
+  
+  /* 📐 Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+  
+  /* 🌫️ Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* 📱 Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
+  /* ⚡ Transitions */
+  --transition-fast: 0.15s ease-out;
+  --transition-base: 0.3s ease-out;
+  --transition-slow: 0.5s ease-out;
+  
+  /* 📊 Z-Index */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+  
+  /* 🔤 Typography */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+}
+
+/* 🌙 Dark Mode Variables */
+[data-theme="dark"] {
+  --color-text: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-light: #9ca3af;
+  --color-text-inverse: #1f2937;
+  
+  --color-background: #111827;
+  --color-background-secondary: #1f2937;
+  --color-background-tertiary: #374151;
+  --color-background-hover: #1f2937;
+  
+  --color-border: #374151;
+  --color-border-light: #1f2937;
+  --color-border-dark: #4b5563;
+}
+
+/* 🎭 Animation Variables */
+:root {
+  --animation-bounce: bounce 1s infinite;
+  --animation-pulse: pulse 2s infinite;
+  --animation-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animation-spin: spin 1s linear infinite;
+  --animation-fade-in: fadeIn 0.5s ease-out;
+  --animation-slide-up: slideUp 0.5s ease-out;
+  --animation-slide-down: slideDown 0.5s ease-out;
+  --animation-slide-left: slideLeft 0.5s ease-out;
+  --animation-slide-right: slideRight 0.5s ease-out;
+  --animation-scale-in: scaleIn 0.3s ease-out;
+  --animation-scale-out: scaleOut 0.3s ease-in;
+}
+
+/* 🎨 Utility Variables */
+:root {
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(16px);
+  --blur-xl: blur(24px);
+  
+  --opacity-0: 0;
+  --opacity-25: 0.25;
+  --opacity-50: 0.5;
+  --opacity-75: 0.75;
+  --opacity-100: 1;
+}
+
+/* 📱 Mobile First Media Query Variables */
+@custom-media --mobile (max-width: 767px);
+@custom-media --tablet (min-width: 768px) and (max-width: 1023px);
+@custom-media --desktop (min-width: 1024px);
+@custom-media --large-desktop (min-width: 1280px);

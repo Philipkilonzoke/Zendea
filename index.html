@@ -7,12 +7,12 @@
   <title>Zendea — Find Jobs & Deals That Matter</title>
   
   <!-- SEO & Social Meta Tags -->
-  <meta name="description" content="Discover amazing job opportunities and exclusive deals on Zendea. Connect, explore, and find what matters to you.">
-  <meta name="keywords" content="jobs, deals, opportunities, employment, discounts, marketplace, AI recommendations">
+  <meta name="description" content="Discover amazing job opportunities and exclusive deals on Zendea. Connect with Philip Kilonzo and explore opportunities that matter to you.">
+  <meta name="keywords" content="jobs, deals, opportunities, employment, discounts, marketplace, Philip Kilonzo, Kenya, career">
   <meta property="og:title" content="Zendea — Find Jobs & Deals That Matter">
   <meta property="og:description" content="Discover amazing job opportunities and exclusive deals on Zendea.">
-  <meta property="og:image" content="https://zendea.com/og-image.jpg">
-  <meta property="og:url" content="https://zendea.com">
+  <meta property="og:image" content="/assets/images/og-image.jpg">
+  <meta property="og:url" content="https://philipkilonzoke.github.io/Zendea">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Zendea — Find Jobs & Deals That Matter">
@@ -24,1242 +24,16 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Map Integration -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Zendea">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-</head>
-<body>
-  <!-- 🎬 Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-logo">Zendea</div>
-    <div class="splash-subtitle">Loading amazing opportunities...</div>
-    <div class="splash-progress">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-  </div>
-
-  <!-- 🎪 Welcome Screen (for guests) -->
-  <div class="welcome-overlay hidden" id="welcomeOverlay">
-    <div class="welcome-content">
-      <div class="welcome-logo">Zendea</div>
-      <p class="welcome-tagline">Bridging Opportunities, Creating Connections</p>
-      <div class="welcome-features">
-        <div class="feature-item">
-          <i class="fas fa-robot"></i>
-          <span>AI-Powered Recommendations</span>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-bell"></i>
-          <span>Smart Job Alerts</span>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-map-marked-alt"></i>
-          <span>Location-Based Search</span>
-        </div>
-      </div>
-      <div class="welcome-buttons">
-        <a href="login.html" class="welcome-btn primary">
-          <i class="fas fa-sign-in-alt"></i> Get Started
-        </a>
-        <button class="welcome-btn" id="continueAsGuest">
-          <i class="fas fa-eye"></i> Browse as Guest
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🎯 Professional Header -->
-  <header class="main-header">
-    <div class="header-container">
-      <!-- Logo Section -->
-      <div class="logo-section">
-        <a href="index.html" class="logo-link">
-          <div class="logo-icon">Z</div>
-          <div class="logo-text">
-            <span class="logo-name">Zendea</span>
-            <span class="logo-tagline">Bridging Opportunities</span>
-          </div>
-        </a>
-      </div>
-      
-      <!-- Main Navigation -->
-      <nav class="main-navigation">
-        <div class="nav-links">
-          <a href="index.html" class="nav-item active" data-page="home">
-            <div class="nav-icon">
-              <i class="fas fa-home"></i>
-            </div>
-            <span class="nav-label">Home</span>
-          </a>
-          
-          <a href="post.html" class="nav-item" data-page="post" id="postLink">
-            <div class="nav-icon">
-              <i class="fas fa-plus-circle"></i>
-            </div>
-            <span class="nav-label">Create</span>
-          </a>
-          
-          <a href="profile.html" class="nav-item" data-page="profile" id="profileLink">
-            <div class="nav-icon">
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <span class="nav-label">Profile</span>
-          </a>
-          
-          <a href="#" class="nav-item" id="messagesLink">
-            <div class="nav-icon">
-              <i class="fas fa-comments"></i>
-              <span class="notification-dot hidden" id="messagesBadge"></span>
-            </div>
-            <span class="nav-label">Messages</span>
-          </a>
-          
-          <a href="#" class="nav-item" id="favoritesLink">
-            <div class="nav-icon">
-              <i class="fas fa-heart"></i>
-            </div>
-            <span class="nav-label">Favorites</span>
-          </a>
-          
-          <a href="#" class="nav-item" id="feedbackLink">
-            <div class="nav-icon">
-              <i class="fas fa-comment-dots"></i>
-            </div>
-            <span class="nav-label">Feedback</span>
-          </a>
-        </div>
-        
-        <!-- User Section -->
-        <div class="user-section">
-          <div class="user-greeting hidden" id="userGreeting">
-            <div class="user-avatar">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="user-info">
-              <span class="user-welcome">Welcome back,</span>
-              <span class="user-name" id="userName">User</span>
-            </div>
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="header-actions">
-            <button class="action-btn notification-btn" id="notificationBtn" title="Notifications">
-              <i class="fas fa-bell"></i>
-              <span class="notification-dot" id="notificationBadge"></span>
-            </button>
-            
-            <button class="action-btn theme-toggle" id="themeToggle" title="Toggle theme">
-              <i class="fas fa-moon"></i>
-            </button>
-            
-            <a href="login.html" class="action-btn login-btn" id="authLink" title="Sign in">
-              <i class="fas fa-sign-in-alt"></i>
-              <span class="btn-text">Sign In</span>
-            </a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- 🏠 Main Content -->
-  <main class="main-container">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1 class="hero-title">
-            Discover Amazing
-            <span class="gradient-text">Opportunities</span>
-          </h1>
-          <p class="hero-subtitle">
-            Find your dream job or exclusive deals with our AI-powered platform. 
-            Join thousands of professionals and deal hunters worldwide.
-          </p>
-          <div class="hero-actions">
-            <button class="btn btn-primary btn-lg hero-cta" id="getStartedBtn">
-              <i class="fas fa-rocket"></i>
-              Get Started Today
-            </button>
-            <button class="btn btn-outline btn-lg hero-cta" id="exploreBtn">
-              <i class="fas fa-search"></i>
-              Explore Opportunities
-            </button>
-          </div>
-        </div>
-        
-        <!-- Quick Stats Cards -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-briefcase"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-number" id="totalJobs">1,247</span>
-              <span class="stat-label">Active Jobs</span>
-            </div>
-            <div class="stat-trend positive">
-              <i class="fas fa-arrow-up"></i>
-              <span>+12%</span>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-tags"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-number" id="totalDeals">856</span>
-              <span class="stat-label">Hot Deals</span>
-            </div>
-            <div class="stat-trend positive">
-              <i class="fas fa-arrow-up"></i>
-              <span>+18%</span>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-users"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-number">12,340</span>
-              <span class="stat-label">Active Users</span>
-            </div>
-            <div class="stat-trend positive">
-              <i class="fas fa-arrow-up"></i>
-              <span>+25%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Advanced Search Section -->
-    <div class="search-section">
-      <div class="search-container">
-        <div class="search-main">
-          <i class="fas fa-search search-icon"></i>
-          <input 
-            type="text" 
-            id="search" 
-            class="search-input" 
-            placeholder="Search jobs, deals, locations..."
-            aria-label="Search jobs and deals"
-          >
-          <button class="search-voice-btn" id="voiceSearchBtn" title="Voice Search">
-            <i class="fas fa-microphone"></i>
-          </button>
-          <button class="btn btn-primary search-btn" id="searchBtn">
-            <i class="fas fa-search"></i> Search
-          </button>
-        </div>
-        
-        <!-- Advanced Filters -->
-        <div class="search-filters" id="searchFilters">
-          <div class="filter-group">
-            <label class="filter-label">Type</label>
-            <select class="filter-select" id="filterType">
-              <option value="all">All Types</option>
-              <option value="job">Jobs Only</option>
-              <option value="deal">Deals Only</option>
-            </select>
-          </div>
-          
-          <div class="filter-group">
-            <label class="filter-label">Location</label>
-            <div class="location-input-group">
-              <input type="text" class="filter-input" id="filterLocation" placeholder="Enter location">
-              <button class="btn-icon" id="useCurrentLocation" title="Use current location">
-                <i class="fas fa-crosshairs"></i>
-              </button>
-            </div>
-          </div>
-          
-          <div class="filter-group">
-            <label class="filter-label">Salary Range</label>
-            <div class="range-slider-container">
-              <input type="range" class="range-slider" id="salaryMin" min="0" max="200000" value="0">
-              <input type="range" class="range-slider" id="salaryMax" min="0" max="200000" value="200000">
-              <div class="range-values">
-                <span id="salaryMinValue">$0</span>
-                <span id="salaryMaxValue">$200k+</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="filter-group">
-            <label class="filter-label">Posted</label>
-            <select class="filter-select" id="filterTime">
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-            </select>
-          </div>
-          
-          <div class="filter-group">
-            <label class="filter-label">Remote</label>
-            <div class="filter-toggles">
-              <label class="toggle-switch">
-                <input type="checkbox" id="remoteOnly">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        
-        <div class="search-actions">
-          <button class="btn btn-ghost" id="toggleFilters">
-            <i class="fas fa-filter"></i> Advanced Filters
-          </button>
-          <button class="btn btn-outline" id="saveSearchBtn">
-            <i class="fas fa-bell"></i> Create Alert
-          </button>
-          <button class="btn btn-ghost" id="mapViewBtn">
-            <i class="fas fa-map"></i> Map View
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI Recommendations -->
-    <section class="section ai-recommendations hidden" id="aiRecommendations">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-robot section-icon"></i>
-          AI Recommendations for You
-        </h2>
-        <button class="btn btn-ghost" id="refreshRecommendations">
-          <i class="fas fa-sync-alt"></i> Refresh
-        </button>
-      </div>
-      <div class="recommendations-carousel">
-        <div class="carousel-container">
-          <div class="carousel-track" id="recommendationsTrack">
-            <!-- AI recommendations will be loaded here -->
-          </div>
-        </div>
-        <button class="carousel-btn prev" id="recPrevBtn">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="carousel-btn next" id="recNextBtn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </section>
-
-    <!-- Trending Tags -->
-    <section class="section trending-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-fire section-icon"></i>
-          Trending Now
-        </h2>
-      </div>
-      <div class="trending-tags">
-        <button class="tag-btn trending" data-tag="remote-work">🏠 Remote Work</button>
-        <button class="tag-btn trending" data-tag="ai-ml">🤖 AI/ML</button>
-        <button class="tag-btn trending" data-tag="startup">🚀 Startup</button>
-        <button class="tag-btn trending" data-tag="tech-deals">💻 Tech Deals</button>
-        <button class="tag-btn trending" data-tag="fullstack">⚡ Full Stack</button>
-        <button class="tag-btn trending" data-tag="freelance">🎯 Freelance</button>
-        <button class="tag-btn trending" data-tag="crypto">₿ Crypto</button>
-        <button class="tag-btn trending" data-tag="saas">☁️ SaaS</button>
-      </div>
-    </section>
-
-    <!-- Jobs Section -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-briefcase section-icon"></i>
-          Featured Jobs
-        </h2>
-        <div class="section-actions">
-          <div class="view-toggles">
-            <button class="view-toggle active" data-view="grid">
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button class="view-toggle" data-view="list">
-              <i class="fas fa-list"></i>
-            </button>
-            <button class="view-toggle" data-view="map">
-              <i class="fas fa-map"></i>
-            </button>
-          </div>
-          <select class="sort-select" id="jobsSort">
-            <option value="relevance">Most Relevant</option>
-            <option value="newest">Newest First</option>
-            <option value="salary">Highest Salary</option>
-            <option value="distance">Nearest First</option>
-          </select>
-        </div>
-      </div>
-      
-      <!-- Map View Container -->
-      <div id="mapContainer" class="map-container hidden">
-        <div id="map" style="height: 400px; border-radius: var(--radius-lg);"></div>
-      </div>
-      
-      <div id="jobs-list" class="card-container">
-        <!-- Loading state -->
-        <div class="card loading">
-          <div class="card-header">
-            <span class="card-type job">Job</span>
-          </div>
-          <h3 class="card-title">Loading amazing opportunities...</h3>
-          <p class="card-description">Please wait while we fetch the latest job postings for you.</p>
-          <div class="card-meta">
-            <span class="card-meta-item">
-              <i class="fas fa-map-marker-alt"></i>
-              Location
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Deals Section -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <i class="fas fa-tags section-icon"></i>
-          Hot Deals
-        </h2>
-        <div class="section-actions">
-          <select class="sort-select" id="dealsSort">
-            <option value="trending">Trending</option>
-            <option value="newest">Newest First</option>
-            <option value="discount">Best Discount</option>
-            <option value="ending">Ending Soon</option>
-          </select>
-        </div>
-      </div>
-      <div id="deals-list" class="card-container">
-        <!-- Loading state -->
-        <div class="card loading">
-          <div class="card-header">
-            <span class="card-type deal">Deal</span>
-          </div>
-          <h3 class="card-title">Loading exclusive deals...</h3>
-          <p class="card-description">Please wait while we fetch the latest deals for you.</p>
-          <div class="card-meta">
-            <span class="card-meta-item">
-              <i class="fas fa-clock"></i>
-              Time remaining
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Load More Button -->
-    <div class="load-more-container">
-      <button id="load-more" class="btn btn-outline btn-lg load-more-btn">
-        <i class="fas fa-chevron-down"></i>
-        <span>Load More Opportunities</span>
-      </button>
-    </div>
-
-    <!-- My Favorites Section -->
-    <section class="section modern-section hidden" id="favoritesSection">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-title-wrapper">
-            <h2 class="section-title">
-              <i class="fas fa-heart section-icon"></i>
-              My Favorites
-            </h2>
-            <p class="section-subtitle">Posts you've saved for later</p>
-          </div>
-          <div class="section-actions">
-            <button class="btn btn-outline btn-sm modern-btn" id="clearFavorites">
-              <i class="fas fa-trash"></i>
-              <span>Clear All</span>
-            </button>
-          </div>
-        </div>
-        <div id="favorites-list" class="card-container modern-grid">
-          <div class="empty-state">
-            <div class="empty-icon">
-              <i class="fas fa-heart-broken"></i>
-            </div>
-            <h3>No favorites yet</h3>
-            <p>Start saving posts you like and they'll appear here!</p>
-            <button class="btn btn-primary" onclick="showSection('home')">
-              <i class="fas fa-search"></i>
-              Browse Posts
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Feedback Section -->
-    <section class="section modern-section hidden" id="feedbackSection">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-title-wrapper">
-            <h2 class="section-title">
-              <i class="fas fa-comment-dots section-icon"></i>
-              Send Feedback
-            </h2>
-            <p class="section-subtitle">Help us improve your experience</p>
-          </div>
-        </div>
-        <div class="feedback-container">
-          <div class="feedback-intro">
-            <div class="feedback-stats">
-              <div class="stat">
-                <span class="stat-number">4.8</span>
-                <span class="stat-label">Average Rating</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">1,247</span>
-                <span class="stat-label">Reviews</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">98%</span>
-                <span class="stat-label">Satisfaction</span>
-              </div>
-            </div>
-          </div>
-          <form id="feedbackForm" class="feedback-form modern-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="feedbackType">
-                  <i class="fas fa-tag"></i>
-                  Feedback Type
-                </label>
-                <select id="feedbackType" class="form-control modern-select" required>
-                  <option value="">Select type...</option>
-                  <option value="bug">🐛 Bug Report</option>
-                  <option value="feature">✨ Feature Request</option>
-                  <option value="improvement">🚀 Improvement</option>
-                  <option value="other">💬 Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="feedbackRating">
-                  <i class="fas fa-star"></i>
-                  Your Rating
-                </label>
-                <div class="rating-container">
-                  <div class="rating-stars" id="feedbackRating">
-                    <span class="star" data-rating="1">★</span>
-                    <span class="star" data-rating="2">★</span>
-                    <span class="star" data-rating="3">★</span>
-                    <span class="star" data-rating="4">★</span>
-                    <span class="star" data-rating="5">★</span>
-                  </div>
-                  <span class="rating-text">Click to rate</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="feedbackTitle">
-                <i class="fas fa-heading"></i>
-                Title
-              </label>
-              <input type="text" id="feedbackTitle" class="form-control modern-input" placeholder="Brief description of your feedback" required>
-            </div>
-            <div class="form-group">
-              <label for="feedbackMessage">
-                <i class="fas fa-comment"></i>
-                Your Message
-              </label>
-              <textarea id="feedbackMessage" class="form-control modern-textarea" rows="5" placeholder="Tell us more about your experience..." required></textarea>
-            </div>
-            <div class="form-actions centered">
-              <button type="submit" class="btn btn-primary btn-lg modern-submit">
-                <i class="fas fa-paper-plane"></i>
-                <span>Send Feedback</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Messages Section -->
-    <section class="section modern-section hidden" id="messagesSection">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-title-wrapper">
-            <h2 class="section-title">
-              <i class="fas fa-envelope section-icon"></i>
-              Messages
-            </h2>
-            <p class="section-subtitle">Connect with other users</p>
-          </div>
-          <div class="section-actions">
-            <button class="btn btn-primary modern-btn" id="composeMessageBtn">
-              <i class="fas fa-plus"></i>
-              <span>New Message</span>
-            </button>
-          </div>
-        </div>
-        <div class="messages-container modern-messages">
-          <div class="messages-sidebar">
-            <div class="sidebar-header">
-              <h3>Conversations</h3>
-              <span class="conversation-count" id="conversationCount">0</span>
-            </div>
-            <div class="conversations-list" id="conversationsList">
-              <div class="empty-state">
-                <div class="empty-icon">
-                  <i class="fas fa-comments"></i>
-                </div>
-                <h4>No conversations yet</h4>
-                <p>Start a conversation by sending a message</p>
-                <button class="btn btn-primary btn-sm" onclick="document.getElementById('composeMessageBtn').click()">
-                  <i class="fas fa-plus"></i>
-                  Send Message
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="message-thread" id="messageThread">
-            <div class="message-thread-header" id="messageThreadHeader">
-              <div class="thread-placeholder">
-                <i class="fas fa-comments"></i>
-                <h3>Select a conversation</h3>
-                <p>Choose a conversation from the sidebar to start messaging</p>
-              </div>
-            </div>
-            <div class="messages-list" id="messagesList">
-              <!-- Messages will be loaded here -->
-            </div>
-            <div class="message-input-container hidden" id="messageInputContainer">
-              <div class="input-wrapper">
-                <input type="text" class="message-input" id="messageInput" placeholder="Type your message...">
-                <button class="btn btn-primary message-send-btn" id="sendMessageBtn">
-                  <i class="fas fa-paper-plane"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Create Post Modal -->
-    <div class="modal-overlay hidden" id="createPostModal">
-      <div class="modal modern-modal">
-        <div class="modal-header">
-          <div class="modal-title-section">
-            <h3><i class="fas fa-plus-circle"></i> Create New Post</h3>
-            <p>Share a job opportunity or deal with the community</p>
-          </div>
-          <button class="modal-close" id="closeCreatePostModal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-content">
-          <form id="createPostForm" class="modern-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="postType">
-                  <i class="fas fa-tag"></i>
-                  Post Type
-                </label>
-                <select id="postType" class="form-control modern-select" required>
-                  <option value="">Select type...</option>
-                  <option value="job">💼 Job Opportunity</option>
-                  <option value="deal">🏷️ Deal/Offer</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="postLocation">
-                  <i class="fas fa-map-marker-alt"></i>
-                  Location
-                </label>
-                <input type="text" id="postLocation" class="form-control modern-input" placeholder="e.g., San Francisco, CA" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="postTitle">
-                <i class="fas fa-heading"></i>
-                Title
-              </label>
-              <input type="text" id="postTitle" class="form-control modern-input" placeholder="Enter a compelling title" required>
-            </div>
-            <div class="form-group">
-              <label for="postDescription">
-                <i class="fas fa-align-left"></i>
-                Description
-              </label>
-              <textarea id="postDescription" class="form-control modern-textarea" rows="5" placeholder="Provide detailed information about your post..." required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="postPrice">
-                <i class="fas fa-dollar-sign"></i>
-                Price/Salary (Optional)
-              </label>
-              <input type="text" id="postPrice" class="form-control modern-input" placeholder="e.g., $75,000/year or $299">
-            </div>
-            <div class="form-actions">
-              <button type="button" class="btn btn-ghost btn-lg" id="cancelCreatePost">
-                <i class="fas fa-times"></i>
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-rocket"></i>
-                <span>Publish Post</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Compose Message Modal -->
-    <div class="modal-overlay hidden" id="composeMessageModal">
-      <div class="modal modern-modal">
-        <div class="modal-header">
-          <div class="modal-title-section">
-            <h3><i class="fas fa-envelope"></i> New Message</h3>
-            <p>Send a private message to another user</p>
-          </div>
-          <button class="modal-close" id="closeComposeMessageModal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-content">
-          <form id="composeMessageForm" class="modern-form">
-            <div class="form-group">
-              <label for="messageRecipient">
-                <i class="fas fa-user"></i>
-                To
-              </label>
-              <input type="email" id="messageRecipient" class="form-control modern-input" placeholder="Enter recipient's email address" required>
-              <small class="form-help">Enter the email address of the person you want to message</small>
-            </div>
-            <div class="form-group">
-              <label for="messageSubject">
-                <i class="fas fa-heading"></i>
-                Subject
-              </label>
-              <input type="text" id="messageSubject" class="form-control modern-input" placeholder="Enter message subject" required>
-            </div>
-            <div class="form-group">
-              <label for="messageBody">
-                <i class="fas fa-comment"></i>
-                Message
-              </label>
-              <textarea id="messageBody" class="form-control modern-textarea" rows="6" placeholder="Type your message here..." required></textarea>
-            </div>
-            <div class="form-actions">
-              <button type="button" class="btn btn-ghost btn-lg" id="cancelComposeMessage">
-                <i class="fas fa-times"></i>
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-paper-plane"></i>
-                <span>Send Message</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- 🎈 Floating Action Button -->
-  <button class="fab hidden" id="fab" aria-label="Create new post">
-    <i class="fas fa-plus"></i>
-  </button>
-
-  <!-- 🔔 Notifications Panel -->
-  <div class="notifications-panel hidden" id="notificationsPanel">
-    <div class="panel-header">
-      <h3>Notifications</h3>
-      <button class="btn btn-ghost btn-sm" id="markAllRead">Mark all read</button>
-    </div>
-    <div class="notifications-list" id="notificationsList">
-      <!-- Notifications will be loaded here -->
-    </div>
-  </div>
-
-  <!-- 💬 Chat Widget -->
-  <div class="chat-widget hidden" id="chatWidget">
-    <div class="chat-header">
-      <div class="chat-user-info">
-        <div class="chat-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <div class="chat-user-details">
-          <span class="chat-user-name">Support Team</span>
-          <span class="chat-status">Online</span>
-        </div>
-      </div>
-      <button class="btn-icon" id="closeChatBtn">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <!-- Messages will be loaded here -->
-    </div>
-    <div class="chat-input-container">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
-      <button class="btn btn-primary btn-sm" id="sendMessageBtn">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- 📊 Advanced Analytics Dashboard Modal -->
-  <div class="modal-overlay hidden" id="analyticsModal">
-    <div class="modal analytics-modal">
-      <div class="modal-header">
-        <h3>📊 Platform Analytics Dashboard</h3>
-        <div class="analytics-controls">
-          <select class="analytics-timeframe" id="analyticsTimeframe">
-            <option value="7d">Last 7 days</option>
-            <option value="30d" selected>Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-            <option value="1y">Last year</option>
-          </select>
-          <button class="btn btn-outline btn-sm" id="exportAnalytics">
-            <i class="fas fa-download"></i> Export
-          </button>
-        </div>
-        <button class="modal-close" id="closeAnalyticsModal">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-content">
-        <!-- Key Metrics Overview -->
-        <div class="metrics-overview">
-          <div class="metric-card">
-            <div class="metric-icon">👥</div>
-            <div class="metric-data">
-              <span class="metric-value" id="totalUsers">2,847</span>
-              <span class="metric-label">Total Users</span>
-              <span class="metric-change positive">+12.5%</span>
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon">💼</div>
-            <div class="metric-data">
-              <span class="metric-value" id="totalJobs">1,234</span>
-              <span class="metric-label">Active Jobs</span>
-              <span class="metric-change positive">+8.3%</span>
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon">🏷️</div>
-            <div class="metric-data">
-              <span class="metric-value" id="totalDeals">567</span>
-              <span class="metric-label">Live Deals</span>
-              <span class="metric-change positive">+15.7%</span>
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon">⚡</div>
-            <div class="metric-data">
-              <span class="metric-value" id="engagementRate">89.2%</span>
-              <span class="metric-label">Engagement</span>
-              <span class="metric-change positive">+3.1%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Advanced Charts and Analytics -->
-        <div class="analytics-grid">
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>📈 Traffic Analytics</h4>
-              <div class="chart-legend">
-                <span class="legend-item">
-                  <span class="legend-color" style="background: #6366f1;"></span>
-                  Page Views
-                </span>
-                <span class="legend-item">
-                  <span class="legend-color" style="background: #10b981;"></span>
-                  Unique Visitors
-                </span>
-              </div>
-            </div>
-            <canvas id="trafficChart" width="400" height="200"></canvas>
-          </div>
-          
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>🎯 Category Distribution</h4>
-              <button class="btn btn-ghost btn-sm" id="toggleChartType">
-                <i class="fas fa-chart-pie"></i> Toggle View
-              </button>
-            </div>
-            <canvas id="categoryChart" width="400" height="200"></canvas>
-          </div>
-          
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>⏰ User Activity Heatmap</h4>
-              <span class="activity-info">Peak hours: 9-11 AM, 2-4 PM</span>
-            </div>
-            <div class="heatmap-container">
-              <canvas id="heatmapChart" width="400" height="150"></canvas>
-            </div>
-          </div>
-          
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>🌍 Geographic Distribution</h4>
-              <select class="region-selector" id="regionSelector">
-                <option value="world">Global</option>
-                <option value="us">United States</option>
-                <option value="eu">Europe</option>
-                <option value="asia">Asia</option>
-              </select>
-            </div>
-            <div class="geo-stats">
-              <div class="geo-item">
-                <span class="country-flag">🇺🇸</span>
-                <span class="country-name">United States</span>
-                <span class="country-percentage">34.2%</span>
-              </div>
-              <div class="geo-item">
-                <span class="country-flag">🇬🇧</span>
-                <span class="country-name">United Kingdom</span>
-                <span class="country-percentage">18.7%</span>
-              </div>
-              <div class="geo-item">
-                <span class="country-flag">🇨🇦</span>
-                <span class="country-name">Canada</span>
-                <span class="country-percentage">12.3%</span>
-              </div>
-              <div class="geo-item">
-                <span class="country-flag">🇩🇪</span>
-                <span class="country-name">Germany</span>
-                <span class="country-percentage">9.8%</span>
-              </div>
-              <div class="geo-item">
-                <span class="country-flag">🇦🇺</span>
-                <span class="country-name">Australia</span>
-                <span class="country-percentage">7.1%</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>💡 AI Insights</h4>
-              <span class="insights-status">Real-time analysis</span>
-            </div>
-            <div class="insights-list">
-              <div class="insight-item">
-                <i class="fas fa-trending-up insight-icon positive"></i>
-                <div class="insight-content">
-                  <span class="insight-title">Growing Trend</span>
-                  <span class="insight-description">Remote work opportunities increased 23% this week</span>
-                </div>
-              </div>
-              <div class="insight-item">
-                <i class="fas fa-clock insight-icon warning"></i>
-                <div class="insight-content">
-                  <span class="insight-title">Peak Time</span>
-                  <span class="insight-description">Highest user activity at 10:30 AM EST</span>
-                </div>
-              </div>
-              <div class="insight-item">
-                <i class="fas fa-star insight-icon info"></i>
-                <div class="insight-content">
-                  <span class="insight-title">Popular Category</span>
-                  <span class="insight-description">Tech deals are 40% more engaging than average</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="analytics-card">
-            <div class="card-header">
-              <h4>🎲 Performance Metrics</h4>
-              <button class="btn btn-ghost btn-sm" id="refreshMetrics">
-                <i class="fas fa-sync-alt"></i>
-              </button>
-            </div>
-            <div class="performance-metrics">
-              <div class="performance-item">
-                <span class="performance-label">Page Load Time</span>
-                <div class="performance-bar">
-                  <div class="bar-fill" style="width: 85%; background: #10b981;"></div>
-                </div>
-                <span class="performance-value">1.2s</span>
-              </div>
-              <div class="performance-item">
-                <span class="performance-label">API Response</span>
-                <div class="performance-bar">
-                  <div class="bar-fill" style="width: 92%; background: #10b981;"></div>
-                </div>
-                <span class="performance-value">0.3s</span>
-              </div>
-              <div class="performance-item">
-                <span class="performance-label">Search Accuracy</span>
-                <div class="performance-bar">
-                  <div class="bar-fill" style="width: 96%; background: #10b981;"></div>
-                </div>
-                <span class="performance-value">96%</span>
-              </div>
-              <div class="performance-item">
-                <span class="performance-label">User Satisfaction</span>
-                <div class="performance-bar">
-                  <div class="bar-fill" style="width: 89%; background: #10b981;"></div>
-                </div>
-                <span class="performance-value">4.5/5</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🔔 Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- 🦶 Professional Footer -->
-  <footer class="main-footer">
-    <div class="footer-container">
-      <!-- Footer Main Content -->
-      <div class="footer-content">
-        <!-- Brand Section -->
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <div class="logo-icon">Z</div>
-            <div class="logo-text">
-              <span class="logo-name">Zendea</span>
-              <span class="logo-tagline">Bridging Opportunities</span>
-            </div>
-          </div>
-          <p class="brand-description">
-            Connecting talented professionals with amazing opportunities and exclusive deals. 
-            Your gateway to success in the digital marketplace.
-          </p>
-          
-                     <!-- Contact Information -->
-           <div class="contact-info">
-             <button class="contact-toggle-btn" id="contactToggleBtn">
-               <i class="fas fa-address-book"></i>
-               <span>Contact Information</span>
-               <i class="fas fa-chevron-down toggle-icon"></i>
-             </button>
-             
-             <div class="contact-details hidden" id="contactDetails">
-               <div class="contact-item whatsapp-contact">
-                 <i class="fab fa-whatsapp"></i>
-                 <a href="https://wa.me/254791943551" target="_blank" rel="noopener">
-                   WhatsApp Chat
-                 </a>
-               </div>
-               <div class="contact-item instagram-contact">
-                 <i class="fab fa-instagram"></i>
-                 <a href="https://instagram.com/philipkilonzo.ke" target="_blank" rel="noopener">
-                   Follow on Instagram
-                 </a>
-               </div>
-               <div class="contact-item email-contact">
-                 <i class="fas fa-envelope"></i>
-                 <a href="mailto:philipkilonzoke@gmail.com">
-                   Send Email
-                 </a>
-               </div>
-             </div>
-           </div>
-        </div>
-        
-        <!-- Quick Links -->
-        <div class="footer-links-section">
-          <div class="footer-column">
-            <h4>For Job Seekers</h4>
-            <ul class="footer-links">
-              <li><a href="#browse-jobs">Browse Jobs</a></li>
-              <li><a href="#remote-jobs">Remote Opportunities</a></li>
-              <li><a href="#salary-insights">Salary Insights</a></li>
-              <li><a href="#career-advice">Career Advice</a></li>
-              <li><a href="#resume-builder">Resume Builder</a></li>
-              <li><a href="#job-alerts">Job Alerts</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-column">
-            <h4>For Employers</h4>
-            <ul class="footer-links">
-              <li><a href="#post-jobs">Post Jobs</a></li>
-              <li><a href="#find-talent">Find Talent</a></li>
-              <li><a href="#employer-branding">Employer Branding</a></li>
-              <li><a href="#pricing">Pricing Plans</a></li>
-              <li><a href="#enterprise">Enterprise Solutions</a></li>
-              <li><a href="#recruitment-api">Recruitment API</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Marketplace</h4>
-            <ul class="footer-links">
-              <li><a href="#deals">Hot Deals</a></li>
-              <li><a href="#categories">Categories</a></li>
-              <li><a href="#trending">Trending Now</a></li>
-              <li><a href="#price-alerts">Price Alerts</a></li>
-              <li><a href="#seller-dashboard">Seller Dashboard</a></li>
-              <li><a href="#deal-alerts">Deal Notifications</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Company</h4>
-            <ul class="footer-links">
-              <li><a href="#about">About Zendea</a></li>
-              <li><a href="#our-story">Our Story</a></li>
-              <li><a href="#careers">Join Our Team</a></li>
-              <li><a href="#press">Press & Media</a></li>
-              <li><a href="#investors">Investors</a></li>
-              <li><a href="#community">Community</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Support & Legal</h4>
-            <ul class="footer-links">
-              <li><a href="#help">Help Center</a></li>
-              <li><a href="#contact">Contact Support</a></li>
-              <li><a href="#privacy">Privacy Policy</a></li>
-              <li><a href="#terms">Terms of Service</a></li>
-              <li><a href="#cookies">Cookie Policy</a></li>
-              <li><a href="#accessibility">Accessibility</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Footer Bottom -->
-      <div class="footer-bottom">
-        <div class="footer-bottom-content">
-                     <div class="footer-copyright">
-             <p>© 2025 Zendea Platform. All rights reserved.</p>
-             <p class="platform-tagline">Connecting Talent with Opportunities</p>
-           </div>
-          
-          <!-- Social Links -->
-          <div class="footer-social">
-            <h5>Follow Us</h5>
-            <div class="social-links">
-              <a href="https://wa.me/254791943551" class="social-link whatsapp" title="WhatsApp" target="_blank" rel="noopener">
-                <i class="fab fa-whatsapp"></i>
-              </a>
-              <a href="https://instagram.com/philipkilonzo.ke" class="social-link instagram" title="Instagram" target="_blank" rel="noopener">
-                <i class="fab fa-instagram"></i>
-              </a>
-              <a href="#" class="social-link twitter" title="Twitter" target="_blank" rel="noopener">
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a href="#" class="social-link linkedin" title="LinkedIn" target="_blank" rel="noopener">
-                <i class="fab fa-linkedin"></i>
-              </a>
-              <a href="#" class="social-link facebook" title="Facebook" target="_blank" rel="noopener">
-                <i class="fab fa-facebook"></i>
-              </a>
-              <a href="#" class="social-link youtube" title="YouTube" target="_blank" rel="noopener">
-                <i class="fab fa-youtube"></i>
-              </a>
-            </div>
-          </div>
-          
-          <!-- Additional Actions -->
-          <div class="footer-actions">
-            <button class="btn btn-outline btn-sm" id="showAnalyticsBtn">
-              <i class="fas fa-chart-bar"></i>
-              <span>Platform Analytics</span>
-            </button>
-            <button class="btn btn-ghost btn-sm" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-              <i class="fas fa-arrow-up"></i>
-              <span>Back to Top</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK v10 -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      getDocs, 
-      doc, 
-      updateDoc, 
-      deleteDoc, 
-      query, 
-      where, 
-      orderBy, 
-      limit, 
-      serverTimestamp,
-      onSnapshot 
-    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword, 
-      signOut, 
-      onAuthStateChanged,
-      GoogleAuthProvider,
-      signInWithPopup
-    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
-    
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPfpjx-S8nwKhW-aWyrrpdGEhpTifIAI0",
-      authDomain: "zendea-d1eed.firebaseapp.com",
-      projectId: "zendea-d1eed",
-      storageBucket: "zendea-d1eed.firebasestorage.app",
-      messagingSenderId: "127651343782",
-      appId: "1:127651343782:web:05e189236881cf3b5fb367"
-    };
-    
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const storage = getStorage(app);
-    
-    // Make Firebase services globally available
-    window.firebase = { 
-      app, 
-      db, 
-      auth, 
-      storage,
-      // Firestore functions
+    import {
+      getFirestore,
       collection,
       addDoc,
       getDocs,
@@ -1272,7 +46,38 @@
       limit,
       serverTimestamp,
       onSnapshot,
-      // Auth functions
+      setDoc
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+    // Make Firebase available globally
+    window.firebase = {
+      initializeApp,
+      getFirestore,
+      getAuth,
+      getStorage,
+      collection,
+      addDoc,
+      getDocs,
+      doc,
+      updateDoc,
+      deleteDoc,
+      query,
+      where,
+      orderBy,
+      limit,
+      serverTimestamp,
+      onSnapshot,
+      setDoc,
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       signOut,
@@ -1282,8 +87,700 @@
     };
   </script>
   
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="app.js"></script>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Zendea">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+
+<body>
+  <!-- 📱 Header -->
+  <header class="header" id="header">
+    <div class="header-container">
+      <!-- Logo -->
+      <a href="#" class="logo">
+        <div class="logo-icon">Z</div>
+        <div class="logo-text">
+          <div class="logo-name">Zendea</div>
+          <div class="logo-tagline">Jobs & Deals</div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="nav">
+        <ul class="nav-links">
+          <li>
+            <a href="#home" class="nav-item active" data-section="home">
+              <i class="fas fa-home nav-icon"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="#jobs" class="nav-item" data-section="jobs">
+              <i class="fas fa-briefcase nav-icon"></i>
+              <span>Jobs</span>
+            </a>
+          </li>
+          <li>
+            <a href="#deals" class="nav-item" data-section="deals">
+              <i class="fas fa-tag nav-icon"></i>
+              <span>Deals</span>
+            </a>
+          </li>
+          <li>
+            <a href="#favorites" class="nav-item auth-only hidden" data-section="favorites">
+              <i class="fas fa-heart nav-icon"></i>
+              <span>Favorites</span>
+            </a>
+          </li>
+          <li>
+            <a href="#messages" class="nav-item auth-only hidden" data-section="messages">
+              <i class="fas fa-envelope nav-icon"></i>
+              <span>Messages</span>
+              <span class="nav-badge" id="messagesBadge">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="#feedback" class="nav-item auth-only hidden" data-section="feedback">
+              <i class="fas fa-comment-dots nav-icon"></i>
+              <span>Feedback</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Notifications -->
+        <button class="header-btn auth-only hidden" id="notificationsBtn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="nav-badge" id="notificationsBadge">0</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="header-btn theme-toggle" id="themeToggle" title="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <!-- User Menu -->
+        <div class="user-menu">
+          <!-- Authenticated User -->
+          <div class="auth-only hidden">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="#profile" class="user-dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#settings" class="user-dropdown-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+              <hr>
+              <a href="#" class="user-dropdown-item" id="signOutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Guest User -->
+          <div class="guest-only">
+            <a href="login.html" class="btn btn-outline btn-sm">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Sign In</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-nav-toggle" id="mobileNavToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 📱 Mobile Navigation -->
+  <div class="mobile-nav hidden" id="mobileNav">
+    <div class="mobile-nav-content">
+      <div class="mobile-nav-header">
+        <div class="logo">
+          <div class="logo-icon">Z</div>
+          <div class="logo-text">
+            <div class="logo-name">Zendea</div>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobileNavClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="#home" class="mobile-nav-item active" data-section="home">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="#jobs" class="mobile-nav-item" data-section="jobs">
+          <i class="fas fa-briefcase"></i>
+          <span>Jobs</span>
+        </a>
+        <a href="#deals" class="mobile-nav-item" data-section="deals">
+          <i class="fas fa-tag"></i>
+          <span>Deals</span>
+        </a>
+        <a href="#favorites" class="mobile-nav-item auth-only hidden" data-section="favorites">
+          <i class="fas fa-heart"></i>
+          <span>Favorites</span>
+        </a>
+        <a href="#messages" class="mobile-nav-item auth-only hidden" data-section="messages">
+          <i class="fas fa-envelope"></i>
+          <span>Messages</span>
+        </a>
+        <a href="#feedback" class="mobile-nav-item auth-only hidden" data-section="feedback">
+          <i class="fas fa-comment-dots"></i>
+          <span>Feedback</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- 🏠 Main Content -->
+  <main class="main">
+    <!-- Hero Section -->
+    <section id="home" class="hero section">
+      <div class="hero-content entrance-fade">
+        <h1 class="hero-title">
+          Find <span class="gradient-text">Jobs & Deals</span><br>
+          That Matter to You
+        </h1>
+        <p class="hero-subtitle">
+          Discover amazing opportunities and exclusive deals curated just for you. 
+          Connect with employers, explore exciting career paths, and save money on the things you love.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg hero-cta" id="getStartedBtn">
+            <i class="fas fa-rocket"></i>
+            <span>Get Started</span>
+          </button>
+          <button class="btn btn-outline btn-lg hero-cta" id="exploreBtn">
+            <i class="fas fa-compass"></i>
+            <span>Explore Now</span>
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card entrance-fade stagger-1">
+            <span class="stat-number" data-target="500">0</span>
+            <span class="stat-label">Jobs Posted</span>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+12% this month</span>
+            </div>
+          </div>
+          <div class="stat-card entrance-fade stagger-2">
+            <span class="stat-number" data-target="1200">0</span>
+            <span class="stat-label">Active Deals</span>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+8% this week</span>
+            </div>
+          </div>
+          <div class="stat-card entrance-fade stagger-3">
+            <span class="stat-number" data-target="850">0</span>
+            <span class="stat-label">Happy Users</span>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+25% this month</span>
+            </div>
+          </div>
+          <div class="stat-card entrance-fade stagger-4">
+            <span class="stat-number" data-target="95">0</span>
+            <span class="stat-label">Success Rate</span>
+            <div class="stat-trend positive">
+              <i class="fas fa-star"></i>
+              <span>4.9/5 rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="container">
+      <div class="search-section">
+        <div class="search-container">
+          <div class="search-main">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search for jobs, deals, or keywords...">
+            <button class="btn btn-primary" id="searchBtn">
+              <i class="fas fa-search"></i>
+              <span>Search</span>
+            </button>
+          </div>
+          
+          <div class="search-filters">
+            <div class="filter-group">
+              <label class="filter-label">Category</label>
+              <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="job">Jobs</option>
+                <option value="deal">Deals</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Location</label>
+              <input type="text" class="filter-input" id="locationFilter" placeholder="Enter location">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Price Range</label>
+              <input type="text" class="filter-input" id="priceFilter" placeholder="e.g., 0-50000">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Sort By</label>
+              <select class="filter-select" id="sortFilter">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Jobs Section -->
+    <section id="jobs" class="section hidden">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Available Jobs</h2>
+          <p class="section-subtitle">Discover career opportunities that match your skills and aspirations</p>
+        </div>
+        
+        <div class="posts-grid" id="jobsGrid">
+          <!-- Jobs will be dynamically loaded here -->
+        </div>
+        
+        <div class="load-more-section">
+          <button class="btn btn-outline load-more-btn" id="loadMoreJobs">
+            <i class="fas fa-plus"></i>
+            <span>Load More Jobs</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deals Section -->
+    <section id="deals" class="section hidden">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Amazing Deals</h2>
+          <p class="section-subtitle">Save money on products and services you love</p>
+        </div>
+        
+        <div class="posts-grid" id="dealsGrid">
+          <!-- Deals will be dynamically loaded here -->
+        </div>
+        
+        <div class="load-more-section">
+          <button class="btn btn-outline load-more-btn" id="loadMoreDeals">
+            <i class="fas fa-plus"></i>
+            <span>Load More Deals</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Favorites Section -->
+    <section id="favorites" class="section hidden auth-only">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-heart text-danger"></i>
+            My Favorites
+          </h2>
+          <p class="section-subtitle">Your saved jobs and deals</p>
+        </div>
+        
+        <div class="posts-grid" id="favoritesGrid">
+          <!-- User's favorites will be loaded here -->
+        </div>
+        
+        <div class="empty-state" id="favoritesEmpty">
+          <div class="empty-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h3>No favorites yet</h3>
+          <p>Start exploring and save your favorite jobs and deals!</p>
+          <button class="btn btn-primary" onclick="showSection('home')">
+            <i class="fas fa-compass"></i>
+            <span>Explore Now</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Messages Section -->
+    <section id="messages" class="section hidden auth-only">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-envelope"></i>
+            Messages
+          </h2>
+          <p class="section-subtitle">Connect with employers and other users</p>
+          <button class="btn btn-primary" id="composeMessageBtn">
+            <i class="fas fa-plus"></i>
+            <span>New Message</span>
+          </button>
+        </div>
+        
+        <div class="messages-container" id="messagesContainer">
+          <!-- Messages will be loaded here -->
+        </div>
+        
+        <div class="empty-state" id="messagesEmpty">
+          <div class="empty-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3>No messages yet</h3>
+          <p>Start a conversation with employers or other users!</p>
+          <button class="btn btn-primary" id="startMessagingBtn">
+            <i class="fas fa-plus"></i>
+            <span>Send Message</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section id="feedback" class="section hidden auth-only">
+      <div class="container-narrow">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-comment-dots"></i>
+            Share Your Feedback
+          </h2>
+          <p class="section-subtitle">Help us improve Zendea by sharing your thoughts</p>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <form id="feedbackForm" class="modern-form">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-star"></i>
+                  Overall Rating
+                </label>
+                <div class="rating-container">
+                  <div class="rating-stars" id="ratingStars">
+                    <i class="fas fa-star star" data-rating="1"></i>
+                    <i class="fas fa-star star" data-rating="2"></i>
+                    <i class="fas fa-star star" data-rating="3"></i>
+                    <i class="fas fa-star star" data-rating="4"></i>
+                    <i class="fas fa-star star" data-rating="5"></i>
+                  </div>
+                  <span class="rating-text" id="ratingText">Click to rate</span>
+                </div>
+                <input type="hidden" id="rating" name="rating" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="feedbackType">
+                  <i class="fas fa-tag"></i>
+                  Feedback Type
+                </label>
+                <select class="form-control" id="feedbackType" name="type" required>
+                  <option value="">Select type</option>
+                  <option value="suggestion">Suggestion</option>
+                  <option value="bug">Bug Report</option>
+                  <option value="feature">Feature Request</option>
+                  <option value="general">General Feedback</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="feedbackMessage">
+                  <i class="fas fa-comment"></i>
+                  Your Message
+                </label>
+                <textarea class="form-control" id="feedbackMessage" name="message" rows="5" 
+                          placeholder="Tell us what you think..." required></textarea>
+              </div>
+              
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send Feedback</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 🦶 Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <!-- About Section -->
+        <div class="footer-section">
+          <h3>About Zendea</h3>
+          <p>Connecting people with opportunities that matter. We help you find the perfect job or discover amazing deals that fit your lifestyle.</p>
+          <div class="social-links">
+            <a href="https://wa.me/254791943551" class="social-link whatsapp" target="_blank" rel="noopener" title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://instagram.com/philipkilonzo.ke" class="social-link instagram" target="_blank" rel="noopener" title="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://linkedin.com/in/philipkilonzo" class="social-link linkedin" target="_blank" rel="noopener" title="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://twitter.com/philipkilonzo" class="social-link twitter" target="_blank" rel="noopener" title="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#jobs">Browse Jobs</a></li>
+            <li><a href="#deals">Find Deals</a></li>
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="#feedback">Feedback</a></li>
+          </ul>
+        </div>
+
+        <!-- Categories -->
+        <div class="footer-section">
+          <h3>Popular Categories</h3>
+          <ul class="footer-links">
+            <li><a href="#jobs">Technology Jobs</a></li>
+            <li><a href="#jobs">Remote Work</a></li>
+            <li><a href="#deals">Electronics Deals</a></li>
+            <li><a href="#deals">Fashion & Beauty</a></li>
+            <li><a href="#deals">Home & Garden</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="footer-section">
+          <h3>Get in Touch</h3>
+          <div class="contact-info">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="contact-details">
+                <h4>WhatsApp</h4>
+                <p><a href="https://wa.me/254791943551" target="_blank">+254 791 943 551</a></p>
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="contact-details">
+                <h4>Instagram</h4>
+                <p><a href="https://instagram.com/philipkilonzo.ke" target="_blank">@philipkilonzo.ke</a></p>
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-details">
+                <h4>Email</h4>
+                <p><a href="mailto:hello@zendea.com">hello@zendea.com</a></p>
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="contact-details">
+                <h4>Location</h4>
+                <p>Nairobi, Kenya</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 <span class="gradient-text">Zendea</span>. Made with ❤️ by Philip Kilonzo. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Action Button -->
+  <button class="fab auth-only hidden" id="createPostFab" title="Create Post">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" title="Back to Top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Notifications Panel -->
+  <div class="notifications-panel hidden" id="notificationsPanel">
+    <div class="notifications-header">
+      <h3>Notifications</h3>
+      <button class="btn btn-ghost btn-sm" id="markAllReadBtn">Mark all read</button>
+    </div>
+    <div class="notifications-list" id="notificationsList">
+      <!-- Notifications will be loaded here -->
+    </div>
+  </div>
+
+  <!-- Create Post Modal -->
+  <div class="modal-overlay hidden" id="createPostModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Post</h2>
+        <button class="modal-close" id="closeCreatePostModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="createPostForm" class="modern-form">
+          <div class="form-group">
+            <label class="form-label" for="postTitle">
+              <i class="fas fa-heading"></i>
+              Title
+            </label>
+            <input type="text" class="form-control" id="postTitle" name="title" placeholder="Enter post title" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="postType">
+              <i class="fas fa-tag"></i>
+              Type
+            </label>
+            <select class="form-control" id="postType" name="type" required>
+              <option value="">Select type</option>
+              <option value="job">Job</option>
+              <option value="deal">Deal</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="postDescription">
+              <i class="fas fa-align-left"></i>
+              Description
+            </label>
+            <textarea class="form-control" id="postDescription" name="description" rows="4" 
+                      placeholder="Describe your post..." required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="postLocation">
+              <i class="fas fa-map-marker-alt"></i>
+              Location
+            </label>
+            <input type="text" class="form-control" id="postLocation" name="location" placeholder="Enter location">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="postPrice">
+              <i class="fas fa-dollar-sign"></i>
+              Price (optional)
+            </label>
+            <input type="number" class="form-control" id="postPrice" name="price" placeholder="Enter price">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelCreatePost">Cancel</button>
+        <button type="submit" form="createPostForm" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          <span>Create Post</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compose Message Modal -->
+  <div class="modal-overlay hidden" id="composeMessageModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Send Message</h2>
+        <button class="modal-close" id="closeComposeMessageModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="composeMessageForm" class="modern-form">
+          <div class="form-group">
+            <label class="form-label" for="messageRecipient">
+              <i class="fas fa-user"></i>
+              To (Email)
+            </label>
+            <input type="email" class="form-control" id="messageRecipient" name="recipient" 
+                   placeholder="Enter recipient's email" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="messageSubject">
+              <i class="fas fa-heading"></i>
+              Subject
+            </label>
+            <input type="text" class="form-control" id="messageSubject" name="subject" 
+                   placeholder="Enter message subject" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="messageBody">
+              <i class="fas fa-comment"></i>
+              Message
+            </label>
+            <textarea class="form-control" id="messageBody" name="message" rows="5" 
+                      placeholder="Type your message..." required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelMessage">Cancel</button>
+        <button type="submit" form="composeMessageForm" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i>
+          <span>Send Message</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="config/firebase.js"></script>
+  <script src="assets/js/firebase-service.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="sw.js"></script>
 </body>
 </html>
