@@ -133,10 +133,9 @@ class ZendeaApp {
 
   closeMobileNav() {
     const mobileNav = document.getElementById('mobileNav');
-    mobileNav?.classList.remove('show');
-    setTimeout(() => {
-      mobileNav?.classList.add('hidden');
-    }, 300);
+    if (mobileNav) {
+      mobileNav.classList.add('hidden');
+    }
   }
 
   updateActiveNavItem(activeItem) {
@@ -160,25 +159,47 @@ class ZendeaApp {
   }
 
   showSection(sectionName) {
-    // Hide all sections
+    // Play transition sound if enabled
+    if (localStorage.getItem('zendea-sound-effects') === 'true') {
+      this.playSound('click');
+    }
+
+    // Hide all sections with fade out
     document.querySelectorAll('.section').forEach(section => {
-      section.classList.add('hidden');
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        section.classList.add('hidden');
+      }, 150);
     });
 
-    // Show the requested section
+    // Show the requested section with smooth transition
     const targetSection = document.getElementById(sectionName);
     if (targetSection) {
-      targetSection.classList.remove('hidden');
-      this.currentSection = sectionName;
-      
-      // Load section-specific data
-      this.loadSectionData(sectionName);
-      
-      // Update page title
-      this.updatePageTitle(sectionName);
-      
-      // Animate section entrance
-      this.animateSectionEntrance(targetSection);
+      setTimeout(() => {
+        targetSection.classList.remove('hidden');
+        targetSection.style.opacity = '0';
+        targetSection.style.transform = 'translateY(20px)';
+        
+        // Force reflow
+        targetSection.offsetHeight;
+        
+        // Animate in
+        targetSection.style.transition = 'all 0.3s ease-out';
+        targetSection.style.opacity = '1';
+        targetSection.style.transform = 'translateY(0)';
+        
+        this.currentSection = sectionName;
+        
+        // Load section-specific data
+        this.loadSectionData(sectionName);
+        
+        // Update page title
+        this.updatePageTitle(sectionName);
+        
+        // Close mobile nav if open
+        this.closeMobileNav();
+      }, 200);
     }
   }
 
@@ -1288,7 +1309,10 @@ class ZendeaApp {
 
   initializeThemeGrid() {
     const themeGrid = document.getElementById('themeGrid');
-    if (!themeGrid) return;
+    if (!themeGrid) {
+      console.warn('⚠️ Theme grid element not found');
+      return;
+    }
 
     const themes = [
       { id: 'light', name: 'Light', primary: '#6366f1', secondary: '#10b981', background: '#ffffff' },
@@ -1311,11 +1335,15 @@ class ZendeaApp {
     ];
 
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    console.log(`🎨 Current theme: ${currentTheme}`);
 
     themeGrid.innerHTML = themes.map(theme => `
       <div class="theme-option ${theme.id === currentTheme ? 'active' : ''}" 
            data-theme="${theme.id}" 
-           title="${theme.name}">
+           title="${theme.name}"
+           role="button"
+           tabindex="0"
+           aria-label="Apply ${theme.name} theme">
         <div class="theme-preview" style="background: ${theme.background};">
           <div class="theme-header" style="background: ${theme.primary};"></div>
           <div class="theme-content">
@@ -1328,23 +1356,59 @@ class ZendeaApp {
       </div>
     `).join('');
 
-    // Add theme selection event listeners
+    // Add theme selection event listeners with improved handling
     themeGrid.querySelectorAll('.theme-option').forEach(option => {
-      option.addEventListener('click', (e) => {
-        const themeId = option.getAttribute('data-theme');
-        this.applyTheme(themeId);
+      const handleThemeClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         
-        // Update active state
+        const themeId = option.getAttribute('data-theme');
+        console.log(`🎨 Theme clicked: ${themeId}`);
+        
+        // Update active state immediately
         themeGrid.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
         option.classList.add('active');
+        
+        // Apply theme
+        this.applyTheme(themeId);
+        
+        // Add visual feedback
+        option.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          option.style.transform = '';
+        }, 150);
+      };
+
+      // Mouse click
+      option.addEventListener('click', handleThemeClick);
+      
+      // Keyboard support
+      option.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleThemeClick(e);
+        }
+      });
+      
+      // Touch support for mobile
+      option.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        handleThemeClick(e);
       });
     });
+
+    console.log(`✅ Theme grid initialized with ${themes.length} themes`);
   }
 
   applyTheme(themeId) {
     try {
-      // Update HTML data-theme attribute
+      console.log(`🎨 Applying theme: ${themeId}`);
+      
+      // Update HTML data-theme attribute immediately
       document.documentElement.setAttribute('data-theme', themeId);
+      
+      // Force CSS recalculation
+      document.body.offsetHeight;
       
       // Save to localStorage
       localStorage.setItem('zendea-theme', themeId);
@@ -1352,8 +1416,25 @@ class ZendeaApp {
       // Update theme toggle icon based on theme
       this.updateThemeIcon(themeId);
       
+      // Update dark mode toggle if in settings
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      if (darkModeToggle) {
+        darkModeToggle.checked = themeId === 'dark';
+      }
+      
+      // Add visual feedback to the page
+      document.body.style.transition = 'background-color 0.3s ease';
+      
+      // Play sound if enabled
+      if (localStorage.getItem('zendea-sound-effects') === 'true') {
+        this.playSound('success');
+      }
+      
       // Show success toast
-      this.showToast(`Applied ${themeId.replace('-', ' ')} theme! 🎨`, 'success');
+      const themeName = themeId.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+      this.showToast(`${themeName} theme applied! 🎨`, 'success');
       
       // Track analytics
       if (window.firebaseService && window.firebaseService.isAuthenticated()) {
@@ -1363,7 +1444,11 @@ class ZendeaApp {
         });
       }
       
-      console.log(`✅ Theme applied: ${themeId}`);
+      console.log(`✅ Theme applied successfully: ${themeId}`);
+      
+      // Trigger a custom event for other components to respond
+      window.dispatchEvent(new CustomEvent('themeChanged', { detail: { themeId } }));
+      
     } catch (error) {
       console.error('❌ Error applying theme:', error);
       this.showToast('Failed to apply theme', 'error');
@@ -1402,46 +1487,73 @@ class ZendeaApp {
         fontSize: localStorage.getItem('zendea-font-size') || '16'
       };
 
-      // Apply settings to UI
-      Object.keys(settings).forEach(key => {
-        const element = document.getElementById(key + (key.includes('Toggle') || key.includes('Input') ? '' : 
-                       key === 'fontSize' ? 'Slider' : 'Select'));
-        if (element) {
-          if (element.type === 'checkbox') {
-            element.checked = settings[key];
-          } else if (element.type === 'range') {
-            element.value = settings[key];
-          } else {
-            element.value = settings[key];
+      console.log('📥 Loading saved settings:', settings);
+
+      // Apply settings to UI elements with better error handling
+      setTimeout(() => {
+        Object.keys(settings).forEach(key => {
+          try {
+            let element;
+            
+            // Handle different input types
+            if (key.includes('Toggle') || key === 'darkMode' || key === 'animations' || key === 'soundEffects' || 
+                key === 'emailNotifications' || key === 'pushNotifications' || key === 'jobAlerts' || 
+                key === 'dealAlerts' || key === 'messageNotifications' || key === 'profileVisibility' || 
+                key === 'showOnlineStatus' || key === 'allowDirectMessages' || key === 'offlineMode' || 
+                key === 'autoSync' || key === 'reducedMotion' || key === 'highContrast' || key === 'screenReader') {
+              
+              element = document.getElementById(key) || document.getElementById(key + 'Toggle');
+              if (element && element.type === 'checkbox') {
+                element.checked = settings[key];
+                console.log(`✅ Set ${key} to ${settings[key]}`);
+              }
+            } else if (key === 'fontSize') {
+              element = document.getElementById('fontSizeSlider');
+              if (element && element.type === 'range') {
+                element.value = settings[key];
+                console.log(`✅ Set font size to ${settings[key]}px`);
+              }
+            } else {
+              element = document.getElementById(key + 'Select') || document.getElementById(key);
+              if (element && (element.tagName === 'SELECT' || element.type === 'text')) {
+                element.value = settings[key];
+                console.log(`✅ Set ${key} to ${settings[key]}`);
+              }
+            }
+          } catch (error) {
+            console.warn(`⚠️ Could not apply setting ${key}:`, error);
           }
-        }
-      });
+        });
+      }, 100);
 
-      // Apply font size
+      // Apply font size immediately
       document.documentElement.style.setProperty('--font-size-base', `${settings.fontSize}px`);
+      document.documentElement.style.setProperty('--font-size-sm', `${settings.fontSize * 0.875}px`);
+      document.documentElement.style.setProperty('--font-size-lg', `${settings.fontSize * 1.125}px`);
+      document.documentElement.style.setProperty('--font-size-xl', `${settings.fontSize * 1.25}px`);
 
-      // Apply accessibility settings
+      // Apply accessibility settings immediately
       if (settings.reducedMotion) {
         document.documentElement.style.setProperty('--animation-duration-fast', '0ms');
         document.documentElement.style.setProperty('--animation-duration-base', '0ms');
         document.documentElement.style.setProperty('--animation-duration-slow', '0ms');
       }
 
-      // Apply language
+      // Apply language immediately
       this.applyLanguage(settings.language);
       
-      // Apply other settings
+      // Apply other settings immediately
       this.applyCountrySettings(settings.country);
       this.applyCurrencyFormat(settings.currency);
       this.applyTimezone(settings.timezone);
       this.applyImageQuality(settings.imageQuality);
       
-      // Apply privacy settings visually
+      // Apply privacy settings visually immediately
       document.documentElement.classList.toggle('private-profile', !settings.profileVisibility);
       document.documentElement.classList.toggle('hide-online-status', !settings.showOnlineStatus);
       document.documentElement.classList.toggle('no-direct-messages', !settings.allowDirectMessages);
       
-      // Apply accessibility classes
+      // Apply accessibility classes immediately
       document.documentElement.classList.toggle('high-contrast', settings.highContrast);
       document.documentElement.classList.toggle('screen-reader-mode', settings.screenReader);
       document.documentElement.classList.toggle('reduced-motion', settings.reducedMotion);
@@ -1460,6 +1572,8 @@ class ZendeaApp {
       if (settings.offlineMode) {
         this.enableOfflineMode();
       }
+
+      console.log('✅ All settings loaded and applied');
 
     } catch (error) {
       console.error('❌ Error loading saved settings:', error);
